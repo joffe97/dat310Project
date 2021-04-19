@@ -1,0 +1,35 @@
+<html>
+<head>
+    <title>Travel</title>
+    <!-- Import Stylesheet, Vue, VueRouter and all components -->
+    <link rel="stylesheet" href="static/style.css" />
+    <script src="https://unpkg.com/vue@3.0.5/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+
+    <script src="static/src/login.js"></script>
+    <script src="static/src/register.js"></script>
+
+    <script src="static/src/router.js"></script>
+    <!-- This uses data URI and can be used to avoid fake favicon requests: -->
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
+    <!-- Husk å legge til alle komponentene -->
+</head>
+<body>
+    <div id="app">
+        <p>
+            <router-link to="/">All fruits</router-link>
+            <router-link to="/register">Favorite fruits</router-link>
+        </p>
+         <!-- component matched by the route will render here -->
+        <router-view></router-view>
+    </div>
+
+    <script>
+        let app = Vue.createApp({
+			
+        });
+        app.use(router);
+        app.mount("#app")    
+    </script>
+</body>
+</html>
