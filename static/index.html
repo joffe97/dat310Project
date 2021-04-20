@@ -9,6 +9,9 @@
 
     <script src="static/src/login.js"></script>
     <script src="static/src/register.js"></script>
+    <script src="static/src/upnext.js"></script>
+    <script src="static/src/finished.js"></script>
+    <script src="static/src/statistics.js"></script>
 
     <script src="static/src/router.js"></script>
     <!-- This uses data URI and can be used to avoid fake favicon requests: -->
@@ -20,9 +23,9 @@
         <header>
             <h1><router-link to="/">Travel</router-link></h1>
             <div v-bind:class="{'topnav': large, 'topnav responsive': isActive}" id="myTopnav">
-                <router-link to="/register">Up Next</router-link>
-                <router-link to="/register">Past Travels</router-link>
-                <router-link to="/register">Fun Facts</router-link>
+                <router-link to="/upnext">Up Next</router-link>
+                <router-link to="/finished">Past Travels</router-link>
+                <router-link to="/statistics">Fun Facts</router-link>
                 <router-link to="/register" id="Logout">Log Out</router-link>
                 <a href="javascript:void(0);" class="icon" v-on:click="toggleMenu">
                   <i class="fa fa-bars"></i>
@@ -31,6 +34,13 @@
         </header>
          <!-- component matched by the route will render here -->
         <router-view></router-view>
+        <footer class="flexbox">
+            <div class="contact">
+                <span class="strong">Customer service:</span> |
+                +47 321 09 87654 |
+                <a href="#">contact@noreply.com</a>
+            </div>
+        </footer class="flexbox">
     </div>
 
     <script>

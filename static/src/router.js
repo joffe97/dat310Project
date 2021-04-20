@@ -5,5 +5,8 @@ let router = VueRouter.createRouter({
     routes: [
       { path: '/', component: loginform },
       { path: '/register', component: registerform},
+      { path: '/upnext', component: upnext},
+      { path: '/finished', component: finishedtrips},
+      { path: '/statistics', component: statistics},
     ]
 });
