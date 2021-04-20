@@ -16,10 +16,23 @@
 </head>
 <body>
     <div id="app">
+        <header>
+            <div id="logo">
+                <h1><router-link to="/">Travel</router-link></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><router-link to="/register">Favorite fruits</router-link></li>
+                    <li><router-link to="/register">Favorite fruits</router-link></li>
+                </ul>
+            </nav>
+        </header>
+        <!--
         <p>
             <router-link to="/">All fruits</router-link>
             <router-link to="/register">Favorite fruits</router-link>
         </p>
+        -->
          <!-- component matched by the route will render here -->
         <router-view></router-view>
     </div>

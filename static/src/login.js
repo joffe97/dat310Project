@@ -1,7 +1,9 @@
 let loginform = {
     template: `
     <div>
-        <p>test login</p>
+        <div class="content">
+            <p>Test</p>
+        </div>
     </div>
     `
 }
