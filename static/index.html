@@ -2,6 +2,7 @@
 <head>
     <title>Travel</title>
     <!-- Import Stylesheet, Vue, VueRouter and all components -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="static/style.css" />
     <script src="https://unpkg.com/vue@3.0.5/dist/vue.global.js"></script>
     <script src="https://unpkg.com/vue-router@4"></script>
@@ -17,6 +18,18 @@
 <body>
     <div id="app">
         <header>
+            <h1><router-link to="/">Travel</router-link></h1>
+            <div class="topnav" id="myTopnav">
+                <router-link to="/register">Favorite fruits</router-link>
+                <router-link to="/register">Favorite fruits</router-link>
+                <router-link to="/register">Favorite fruits</router-link>
+                <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                  <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </header>
+        <!--
+        <header>
             <div id="logo">
                 <h1><router-link to="/">Travel</router-link></h1>
             </div>
@@ -24,9 +37,11 @@
                 <ul>
                     <li><router-link to="/register">Favorite fruits</router-link></li>
                     <li><router-link to="/register">Favorite fruits</router-link></li>
+                    <li><router-link to="/register">Favorite fruits</router-link></li>
                 </ul>
             </nav>
         </header>
+        -->
         <!--
         <p>
             <router-link to="/">All fruits</router-link>
@@ -38,6 +53,14 @@
     </div>
 
     <script>
+        function myFunction() {
+            var x = document.getElementById("myTopnav");
+            if (x.className === "topnav") {
+                x.className += " responsive";
+            } else {
+                x.className = "topnav";
+            }
+            }
         let app = Vue.createApp({
 			
         });
