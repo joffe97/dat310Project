@@ -19,12 +19,12 @@
     <div id="app">
         <header>
             <h1><router-link to="/">Travel</router-link></h1>
-            <div class="topnav" id="myTopnav">
+            <div v-bind:class="{'topnav': large, 'topnav responsive': isActive}" id="myTopnav">
                 <router-link to="/register">Favorite fruits</router-link>
                 <router-link to="/register">Favorite fruits</router-link>
                 <router-link to="/register">Favorite fruits</router-link>
                 <router-link to="/register" id="Logout">Log Out</router-link>
-                <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <a href="javascript:void(0);" class="icon" v-on:click="toggleMenu">
                   <i class="fa fa-bars"></i>
                 </a>
             </div>
@@ -34,16 +34,25 @@
     </div>
 
     <script>
-        function myFunction() {
-            var x = document.getElementById("myTopnav");
-            if (x.className === "topnav") {
-                x.className += " responsive";
-            } else {
-                x.className = "topnav";
-            }
-            }
         let app = Vue.createApp({
-			
+            data: function(){
+                return {
+                    isActive: false,
+                    large: true
+                }
+            },
+            methods: {
+                toggleMenu: function() {
+                    if (this.isActive === false) {
+                        this.isActive = true;
+                        this.large = false;
+                    } else {
+                        this.isActive = false;
+                        this.large = true;
+                    }
+                }
+            },
+            
         });
         app.use(router);
         app.mount("#app")    
