@@ -140,7 +140,7 @@ footer .contact a {
     max-width: 1400px;
     margin: auto;
     margin-top: 100px;
-    width: 90%;
+    width: 75%;
     position: relative;
 }
 
@@ -149,4 +149,61 @@ footer .contact a {
     .content {
         margin-top: 230px;
     }
+}
+
+/** Trip-article **/
+.card {
+    border: 2px dotted #E9E9E9;
+    background-color: white;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: 5px;
+    box-shadow: 2px 2px #e9e9e9;
+    border-radius: 10px;
+    flex-grow: 1
+}
+
+.outer {
+    position: relative;
+    width: 20em;
+    height: 16em;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+.card.front {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cardboard {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: #e3f2fd;
+    margin: auto;
+    width: 100%;
+    perspective: 1000px;
+    margin-top: 2%;
+    margin-bottom: 5%;
+}
+
+/** Banners **/
+.image-box img {
+    border: 1px solid #335c81;
+    height: 100px;
+    width: 100%;
+}
+
+/** Add trip div **/
+#adddiv {
+    background-color: #f2f2f2;
+    text-align: center;
+}
+
+#addtrip {
+    border-radius: 15px;
 }
