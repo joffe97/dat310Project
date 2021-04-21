@@ -169,7 +169,7 @@ footer .contact a {
 .outer {
     position: relative;
     width: 20em;
-    height: 16em;
+    height:30em;
     flex-wrap: wrap;
     flex-grow: 1;
 }
@@ -178,6 +178,8 @@ footer .contact a {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
+    /**justify-content: space-between;**/
 }
 
 .cardboard {
@@ -191,11 +193,40 @@ footer .contact a {
     margin-bottom: 5%;
 }
 
-/** Banners **/
+/** Banners and pictures **/
 .image-box img {
     border: 1px solid #335c81;
     height: 100px;
     width: 100%;
+}
+
+.outer img {
+    width: 80%;
+    height: 50%;
+    margin-top: 3%;
+    border: 3px solid #e3f2fd;
+    border-radius: 10px;
+}
+
+/** Up next trip component **/
+.description {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.description h3 {
+    margin: 0px;
+    text-align: center;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-decoration: underline wavy #e3f2fd;
+}
+
+.description p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 
 /** Add trip div **/
