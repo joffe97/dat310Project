@@ -170,11 +170,12 @@ def updateFinished(conn, tripid, userid, finished):
     finally:
         cur.close()
 
+# Check if i need this.
 def get_trip_by_id(conn, tripid):
     """Get user details by name."""
     cur = conn.cursor()
     try:
-        sql = ("SELECT tripid, city, country, continent, date, description, image, favorite, finished, userid FROM trips WHERE tridid = ?")
+        sql = ("SELECT tripid, city, country, continent, date, description, image, favorite, finished, userid FROM trips WHERE tripid = ?")
         cur.execute(sql, (tripid,))
         for row in cur:
             (tripid, city, country, continent, date, description, image, favorite, finished, userid) = row
@@ -204,6 +205,34 @@ def get_trip_by_id(conn, tripid):
                 "finished": None,
                 "userid": None
             }
+    except sqlite3.Error as err:
+        print("Error: {}".format(err))
+    finally:
+        cur.close()
+
+def get_all_trips(conn, userid):
+    """Get user details by name."""
+    cur = conn.cursor()
+    all_trips = []
+    try:
+        sql = ("SELECT tripid, city, country, continent, date, description, image, favorite, finished, userid FROM trips WHERE userid = ?")
+        cur.execute(sql, (userid,))
+        for row in cur:
+            (tripid, city, country, continent, date, description, image, favorite, finished, userid) = row
+            trip = {
+                "tripid": tripid,
+                "city": city,
+                "country": country,
+                "contient": continent,
+                "date": date,
+                "description": description,
+                "image": image,
+                "favorite": favorite,
+                "finished": finished,
+                "userid": userid
+            }
+            all_trips.append(trip)
+        return all_trips
     except sqlite3.Error as err:
         print("Error: {}".format(err))
     finally:

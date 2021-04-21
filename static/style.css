@@ -238,3 +238,18 @@ footer .contact a {
 #addtrip {
     border-radius: 15px;
 }
+
+.box {
+    width: 450px;
+    margin-left: 30%;
+    padding:10px;
+}
+
+.container {
+    display: flex;
+}
+label.fixed {
+    display: inline-block;
+    width: 100px;
+}
+
