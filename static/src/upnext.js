@@ -188,6 +188,7 @@ let upnext = {
                 }
                 this.editing = false;
                 this.seen = false;
+                this.resetInputs();
                 let request = await fetch("/trip/" + trip.tripid, {
                     method: "PUT",
                     headers: {
@@ -211,6 +212,16 @@ let upnext = {
             this.newtrip.image = trip.image;
             this.editing = true;
             this.seen = true;
+        },
+        resetInputs: function() {
+            this.newtrip.tripid = "";
+            this.newtrip.city = "";
+            this.newtrip.country = "";
+            this.newtrip.continent = "";
+            this.newtrip.date = "";
+            this.newtrip.description = "";
+            this.newtrip.image = "";
         }
+            
     }
 }

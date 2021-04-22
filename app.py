@@ -36,8 +36,8 @@ def deleteTrip(tid):
 def updateTrip(tripid):
     data = request.get_json()
     if data.get("tripid", "") == "":
-        abort(400, "No new name submitted")
-    alltrips = [{tripid:1}, {tripid:2}] #hent fra db
+        abort(400, "No new trip submitted")
+    alltrips = [{tripid:1}, {tripid:2}, {tripid:3}] #hent fra db
     for trip in alltrips:
         if trip[tripid] == tripid:
             # update data in db
