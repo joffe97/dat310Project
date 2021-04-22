@@ -30,7 +30,7 @@ let upnext = {
         </div>
         <div v-if="seen" v-bind:style="{ background: '#e3f2fd' }">
             <div class="container">
-                <div class="box">
+                <form class="box" @submit="validateForm">
                     <label for="city" class="fixed">City: </label><input id="city" v-model="newtrip.city"/><br>
                     <label for="country" class="fixed">Country: </label><input id="country" v-model="newtrip.country"/><br>
                     <label for="continent" class="fixed">Continent:</label>
@@ -42,8 +42,14 @@ let upnext = {
                     <label for="date" class="fixed">Date:</label><input type="date" id="date" v-model="newtrip.date" /><br>
                     <label for="description" class="fixed">Description: </label><input id="description" v-model="newtrip.description"/><br>
                     <label for="uploadimage" class="fixed">Image: </label><input type="file" accept="image/*" id="file-input"><br>
-                    <input type="submit" value="Submit">  
-                </div>
+                    <input type="submit" value="Submit">   
+                </form>
+                <p v-if="errors.length">
+                    <b>Please correct the following error(s) before submitting:</b>
+                    <ul>
+                        <li v-for="error in errors">{{ error }}</li>
+                    </ul>
+              </p>
             </div>
         </div>
         <!-- For-loop alle ganger untatt den første. Sortert etter dato. -->
@@ -83,10 +89,33 @@ let upnext = {
                 { text: 'Africa', value: 'Africa' },
                 { text: 'Australia/Oceania', value: 'Australia/Oceania' },
                 { text: 'Antarctica', value: 'Antarctica' }
-            ]
+            ],
+            errors: [],
         }
     },
     methods: {
-
+        validateForm: function (e) {
+            this.errors = [];
+            if (!this.newtrip.city) {
+              this.errors.push("City required");
+            }
+            if (!this.newtrip.country) {
+                this.errors.push("Country required");
+            }
+            if (!this.newtrip.continent) {
+                this.errors.push("Continent required");
+            }
+            if (!this.newtrip.date) {
+                this.errors.push("Date required");
+            }
+            if (!this.newtrip.description) {
+                this.errors.push("Description required");
+            }
+            //NEED VALIDATION FOR IMAGE
+            if (!this.errors.length) {
+                return true;
+            }
+            e.preventDefault();
+        }
     }
 }
