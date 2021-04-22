@@ -9,8 +9,8 @@ let upnext = {
         <!-- For-loop kjørt en gang. Sortert etter dato. -->
         <div class="cardboard">
             <tripArticle
-            v-for="article in (array.length - (array.length-1))"
-            v-bind:article="article" 
+            v-for="article, index in 1"
+            v-bind:article="trips[index]" 
             >
             </tripArticle>
         </div>
@@ -30,7 +30,7 @@ let upnext = {
         </div>
         <div v-if="seen" v-bind:style="{ background: '#e3f2fd' }">
             <div class="container">
-                <form class="box" @submit="validateForm">
+                <form class="box" @submit="addTrip">
                     <label for="city" class="fixed">City: </label><input id="city" v-model="newtrip.city"/><br>
                     <label for="country" class="fixed">Country: </label><input id="country" v-model="newtrip.country"/><br>
                     <label for="continent" class="fixed">Continent:</label>
@@ -55,23 +55,19 @@ let upnext = {
         <!-- For-loop alle ganger untatt den første. Sortert etter dato. -->
         <div class="cardboard">
             <tripArticle
-            v-for="article, index in array.length-1"
-            v-bind:article="array[index+1]" 
+            v-for="article, index in trips.length-1"
+            v-bind:article="trips[index+1]" 
             >
             </tripArticle>
         </div>
-        <!-- Remember to remove -->
-        <table>
-                <tr v-for="(value, key) in newtrip">
-                <td>{{ key }}</td>
-                <td>{{ value }}</td>
-            </tr>
-        </table>
     </div>
     `,
     data: function(){
         return {
-            array: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"],
+            trips: [{tripid: 2, city: "Los Angeles", country: "USA", continent: "North America", date: "2021-05-12", description: "This is a long and nice description of all the trips. It is only temporarily because I need some text for demonstration", image: "this.image", favorite: false, finished: false, userid: 1},
+                    {tripid: 3, city: "San Diego", country: "USA", continent: "North America", date: "2021-06-12", description: "This is a long and nice description of all the trips. It is only temporarily because I need some text for demonstration", image: "this.image", favorite: false, finished: false, userid: 1},
+                    {tripid: 4, city: "Texas", country: "USA", continent: "North America", date: "2021-07-12", description: "This is a long and nice description of all the trips. It is only temporarily because I need some text for demonstration", image: "this.image", favorite: false, finished: false, userid: 1},
+                    {tripid: 5, city: "Dallas", country: "USA", continent: "North America", date: "2021-08-12", description: "This is a long and nice description of all the trips. It is only temporarily because I need some text for demonstration", image: "this.image", favorite: false, finished: false, userid: 1}],
             seen: false,
             newtrip: {
                 city: "",
@@ -80,6 +76,7 @@ let upnext = {
                 date: "",
                 description: "",
                 image: "",
+                userid: "",
             },
             cnt: [
                 { text: 'Europe', value: 'Europe' },
@@ -116,6 +113,39 @@ let upnext = {
                 return true;
             }
             e.preventDefault();
-        }
+        }, 
+        addTrip: function (e) {
+            if (this.validateForm(e)) {
+                console.log("no errors")
+                console.log(this.trips)
+                userid = this.getUserId();
+                this.sendTrip(userid)
+            } else {
+                console.log("errors")
+            }
+        },
+        getUserId: function() {
+            if (this.trips.length) {
+                return this.trips[0].userid
+            }
+        },
+        sendTrip: async function(uid) {
+            let new_trip = Vue.reactive({tripid: null, city: this.newtrip.city, country: this.newtrip.country, continent: this.newtrip.continent, date: this.newtrip.date, description: this.newtrip.description, image: this.newtrip.image, favorite: false, finished: false, userid: uid});
+            this.trips.push(new_trip);
+            let request = await fetch("/trips", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(new_trip)
+            });
+            if (request.status == 200){
+                let result = await request.json();
+                console.log(result);
+                if (new_trip.city == result.city && new_trip.date == result.date){
+                    new_trip.tripid = result.tripid;
+                }
+            }
+        },
     }
 }
