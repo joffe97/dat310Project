@@ -47,7 +47,6 @@ let upnext = {
                     <label for="uploadimage" class="fixed">Image: </label><input type="file" accept="image/*" id="file-input"><br>
                     <input type="submit" value="Submit" v-if="!editing">  
                 </form>
-                <button @click="modifyTrip" v-if="editing">Modify trip</button>
                 <p v-if="errors.length">
                     <b>Please correct the following error(s) before submitting:</b>
                     <ul>
@@ -55,6 +54,7 @@ let upnext = {
                     </ul>
               </p>
             </div>
+            <button @click="modifyTrip" v-if="editing" id="modButton" v-bind:style="{'margin-left': '40%', 'margin-bottom': '10px'}">Modify trip</button>
         </div>
         <!-- For-loop alle ganger untatt den første. Sortert etter dato. -->
         <div class="cardboard">
