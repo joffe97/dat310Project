@@ -62,7 +62,7 @@ let upnext = {
             v-for="article, index in trips.length-1"
             v-bind:article="trips[index+1]" 
             v-on:delete="deleteTrip(index, false)"
-            v-on:modify="editInfo(trips[index])"
+            v-on:modify="editInfo(trips[index+1])"
             >
             </tripArticle>
         </div>
@@ -161,11 +161,12 @@ let upnext = {
             let trip = ""
             if (first) {
                 trip = this.trips[index];
+                this.trips.splice(index, 1);
             } else {
                 trip = this.trips[index+1];
+                this.trips.splice(index+1, 1);
             }
             console.log(trip)
-            this.trips.splice(index, 1);
             let request = await fetch("/trip/" + trip.tripid, {
                 method: "DELETE",
                 headers: {
@@ -180,8 +181,10 @@ let upnext = {
         modifyTrip: async function(e) {
             if (this.validateForm(e)) {
                 let trip = this.trips.find(t=>t.tripid == this.newtrip.tripid);
+                console.log(trip)
                 if (trip) {
                     console.log("Modifying");
+                    trip.tripid = this.newtrip.tripid
                 }
                 this.editing = false;
                 this.seen = false;
