@@ -10,7 +10,9 @@ let upnext = {
         <div class="cardboard">
             <tripArticle
             v-for="article, index in 1"
-            v-bind:article="trips[index]" 
+            v-bind:article="trips[index]"
+            v-on:delete="deleteTrip(index, true)" 
+            v-on:modify="editInfo(trips[index])" 
             >
             </tripArticle>
         </div>
@@ -20,7 +22,8 @@ let upnext = {
         </div>
         <!-- Add Trip -->
         <div id="adddiv">
-            <label for="addtrip">Add trip: </label>
+            <label for="addtrip" v-if="editing">Modify trip: </label>
+            <label for="addtrip" v-else>Add trip: </label>
             <button class="btn btn-secondary" id="addtrip" v-on:click="seen = !seen"> <!-- Lage ny knapp for å lukke? Eller on submit, lukk. Ha kun =true her og sett lik false ved lukkingen-->
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -42,8 +45,9 @@ let upnext = {
                     <label for="date" class="fixed">Date:</label><input type="date" id="date" v-model="newtrip.date" /><br>
                     <label for="description" class="fixed">Description: </label><input id="description" v-model="newtrip.description"/><br>
                     <label for="uploadimage" class="fixed">Image: </label><input type="file" accept="image/*" id="file-input"><br>
-                    <input type="submit" value="Submit">   
+                    <input type="submit" value="Submit" v-if="!editing">  
                 </form>
+                <button @click="modifyTrip" v-if="editing">Modify trip</button>
                 <p v-if="errors.length">
                     <b>Please correct the following error(s) before submitting:</b>
                     <ul>
@@ -57,6 +61,8 @@ let upnext = {
             <tripArticle
             v-for="article, index in trips.length-1"
             v-bind:article="trips[index+1]" 
+            v-on:delete="deleteTrip(index, false)"
+            v-on:modify="editInfo(trips[index])"
             >
             </tripArticle>
         </div>
@@ -70,6 +76,7 @@ let upnext = {
                     {tripid: 5, city: "Dallas", country: "USA", continent: "North America", date: "2021-08-12", description: "This is a long and nice description of all the trips. It is only temporarily because I need some text for demonstration", image: "this.image", favorite: false, finished: false, userid: 1}],
             seen: false,
             newtrip: {
+                tripid: "",
                 city: "",
                 country: "",
                 continent: "",
@@ -88,6 +95,7 @@ let upnext = {
                 { text: 'Antarctica', value: 'Antarctica' }
             ],
             errors: [],
+            editing: false,
         }
     },
     methods: {
@@ -147,5 +155,59 @@ let upnext = {
                 }
             }
         },
+        deleteTrip: async function(index, first) {
+            // first-attribute is to check if the trip is the next trip or not. 
+            // Because of the for-loop, the index varies according to the trips index
+            let trip = ""
+            if (first) {
+                trip = this.trips[index];
+            } else {
+                trip = this.trips[index+1];
+            }
+            console.log(trip)
+            this.trips.splice(index, 1);
+            let request = await fetch("/trip/" + trip.tripid, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            if (request.status == 200){
+                let result = await request.text();
+                console.log(result);
+            }
+        },
+        modifyTrip: async function(e) {
+            if (this.validateForm(e)) {
+                let trip = this.trips.find(t=>t.tripid == this.newtrip.tripid);
+                if (trip) {
+                    console.log("Modifying");
+                }
+                this.editing = false;
+                this.seen = false;
+                let request = await fetch("/trip/" + trip.tripid, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(trip)
+                });
+                if (request.status == 200){
+                    let result = await request.text();
+                    console.log(result);
+                }
+            }
+        },
+        editInfo: function(trip) {
+            this.newtrip.tripid = trip.tripid;
+            this.newtrip.city = trip.city;
+            this.newtrip.country = trip.country;
+            this.newtrip.continent = trip.continent;
+            this.newtrip.date = trip.date;
+            this.newtrip.description = trip.description;
+            this.newtrip.image = trip.image;
+            this.editing = true;
+            this.seen = true;
+        }
     }
 }

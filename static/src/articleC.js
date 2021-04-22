@@ -10,12 +10,12 @@ let articleC = {
                 <p>{{article.description}}</p>
                 <div id="delModDiv">
                     <a
-                    href="#"
-                    @onclick="$emit('modify')" 
+                    href="javascript:void(0);"
+                    @click="$emit('modify')" 
                     >Modify</a>
                     <a
-                    href="#"
-                    @onclick="$emit('delete')"
+                    href="javascript:void(0);"
+                    @click="$emit('delete')"
                     >Delete</a>
                 </div>
             </div>

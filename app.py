@@ -19,6 +19,34 @@ def addTrip():
         # bad request return 400 error
         abort(400, "Missing requirements")
 
+@app.route("/trip/<int:tid>", methods=["DELETE"])
+def deleteTrip(tid):
+    print(tid)
+    alltrips = "" #Hent fra db
+    #for trip in alltrips:
+    #    if alltrips["tripid"] == tid:
+    #        #Remove from db
+    #        break
+    #else:
+        #not found
+    #    abort(404, "Trip not found")
+    return "Trip {} removed!".format(tid)
+
+@app.route("/trip/<int:tripid>", methods=["PUT"])
+def updateTrip(tripid):
+    data = request.get_json()
+    if data.get("tripid", "") == "":
+        abort(400, "No new name submitted")
+    alltrips = [{tripid:1}, {tripid:2}] #hent fra db
+    for trip in alltrips:
+        if trip[tripid] == tripid:
+            # update data in db
+            break
+    else:
+        #not found
+        abort(404, "Trip not found")
+    return "Trip {} updated!".format(tripid)
+
 @app.route("/")
 def index():
     return app.send_static_file("index.html")
