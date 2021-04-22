@@ -217,6 +217,7 @@ footer .contact a {
 
 .description h3 {
     margin: 0px;
+    margin-bottom: 5px;
     text-align: center;
     font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     text-decoration: underline wavy #e3f2fd;
@@ -227,6 +228,15 @@ footer .contact a {
     margin-bottom: 0px;
     margin-left: 30px;
     margin-right: 30px;
+}
+
+#delModDiv a {
+    padding: 18%;
+    color: #335c81;
+}
+
+#delModDiv {
+    text-align: center;
 }
 
 /** Add trip div **/

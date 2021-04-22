@@ -8,6 +8,16 @@ let articleC = {
                 <h3>\{{article.city}}, {{article.country}}</h3>
                 <p><strong>Departure: {{ article.date }}</strong></p>
                 <p>{{article.description}}</p>
+                <div id="delModDiv">
+                    <a
+                    href="#"
+                    @onclick="$emit('modify')" 
+                    >Modify</a>
+                    <a
+                    href="#"
+                    @onclick="$emit('delete')"
+                    >Delete</a>
+                </div>
             </div>
         </div>
     </div>
