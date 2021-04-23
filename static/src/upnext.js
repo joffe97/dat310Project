@@ -4,7 +4,8 @@ let upnext = {
          <!-- Next Trip banner -->
         <div class="image-box">
             <img src="static/images/Nextbanner.png" alt="NextTripBanner"/>
-            <p>Next Trip</p>
+            <p v-if="daysUntilNextTrip===1" v-bind:style="{'position':'absolute', 'top':'50%', 'left':'50%', 'transform': 'translate(-50%, -50%)', 'color':'white', 'font-size':'25px', 'margin': '0', 'margin-top':'1%'}" >{{daysUntilNextTrip}} day!</p>
+            <p v-bind:style="{'position':'absolute', 'top':'4.5%', 'left':'48%', 'transform': 'translate(-50%, -50%)', 'color':'white', 'font-size':'25px', 'margin': '0', 'margin-top':'1%'}"  v-else>{{daysUntilNextTrip}} days!</p>
         </div>
         <!-- For-loop kjørt en gang. Sortert etter dato. -->
         <div class="cardboard" v-if="trips.length">
@@ -93,6 +94,7 @@ let upnext = {
             ],
             errors: [],
             editing: false,
+            daysUntilNextTrip: 0,
         }
     },
     created: async function(){
@@ -100,6 +102,8 @@ let upnext = {
         if (request.status == 200){
             let result = await request.json();
             this.trips = result;
+            this.sortedTripsByDate()
+            this.nextTrip()
         }
     },
     methods: {
@@ -156,6 +160,8 @@ let upnext = {
                 if (new_trip.city == result.city && new_trip.date == result.date){
                     new_trip.tripid = result.tripid;
                 }
+                this.sortedTripsByDate()
+                this.nextTrip()
             }
         },
         deleteTrip: async function(index, first) {
@@ -205,6 +211,7 @@ let upnext = {
                 if (request.status == 200){
                     let result = await request.text();
                     console.log(result);
+                    this.nextTrip()
                 }
             }
         },
@@ -227,7 +234,19 @@ let upnext = {
             this.newtrip.date = "";
             this.newtrip.description = "";
             this.newtrip.image = "";
-        }
-            
-    }
+        },
+        nextTrip: function() {
+            let tripDate = new Date(this.trips[0].date);
+            let nextTripDate = tripDate.getFullYear()+'-'+(tripDate.getMonth()+1)+'-'+tripDate.getDate();
+            console.log(nextTripDate)
+            let today = new Date();
+            let dateToday = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            console.log(dateToday)
+            this.daysUntilNextTrip = Math.round(( Date.parse(nextTripDate) - Date.parse(dateToday) )/(1000*60*60*24));
+            console.log(this.daysUntilNextTrip)
+        },
+        sortedTripsByDate: function() {
+            return this.trips.sort((a, b) => new Date(a.date) - new Date(b.date))
+        },   
+    },
 }
