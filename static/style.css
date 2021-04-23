@@ -182,7 +182,7 @@ footer .contact a {
     /**justify-content: space-between;**/
 }
 
-.cardboard {
+.wrapper {
     display: flex;
     flex-wrap: wrap;
     background-color: #e3f2fd;
@@ -263,3 +263,16 @@ label.fixed {
     width: 100px;
 }
 
+/** Mini menu on finished trips **/
+#nrMenu {
+    background-color: #f2f2f2;
+    text-align: right;
+}
+
+#revisitMenu {
+    background-color: #f2f2f2;
+}
+
+#serachFilterDiv {
+
+}

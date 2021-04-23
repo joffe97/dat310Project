@@ -8,7 +8,7 @@ let upnext = {
             <p v-bind:style="{'position':'absolute', 'top':'4.5%', 'left':'48%', 'transform': 'translate(-50%, -50%)', 'color':'white', 'font-size':'25px', 'margin': '0', 'margin-top':'1%'}"  v-else>{{daysUntilNextTrip}} days!</p>
         </div>
         <!-- For-loop kjørt en gang. Sortert etter dato. -->
-        <div class="cardboard" v-if="trips.length">
+        <div class="wrapper" v-if="trips.length">
             <tripArticle
             v-for="article, index in 1"
             v-bind:article="trips[index]"
@@ -58,7 +58,7 @@ let upnext = {
             <button @click="modifyTrip" v-if="editing" id="modButton" v-bind:style="{'margin-left': '40%', 'margin-bottom': '10px'}">Modify trip</button>
         </div>
         <!-- For-loop alle ganger untatt den første. Sortert etter dato. -->
-        <div class="cardboard" v-if="trips.length">
+        <div class="wrapper" v-if="trips.length">
             <tripArticle
             v-for="article, index in trips.length-1"
             v-bind:article="trips[index+1]" 
