@@ -1,16 +1,17 @@
-class Trip {
-    constructor(id, city, country, continent, date, description, image, finished, favorite, userid) {
-        this.id = id;
-        this.city = city;
-        this.country = country;
-        this.continent = continent;
-        this.date = date;
-        this.description = description;
-        this.image = image;
-        this.finished = finished;
-        this.favorite = favorite;
-        this.userid = userid;
+async function getTrips(){
+    let request = await fetch("/trips");
+    if (request.status == 200){
+        let result = await request.json();
+        return result
     }
 }
 
-let trips = []
+class DataStore {
+    constructor(trips){
+        this.state = Vue.reactive({
+            trips: trips,
+        });
+    }
+}
+let trips = getTrips();
+let store = new DataStore(trips);

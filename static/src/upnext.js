@@ -7,7 +7,7 @@ let upnext = {
             <p>Next Trip</p>
         </div>
         <!-- For-loop kjørt en gang. Sortert etter dato. -->
-        <div class="cardboard">
+        <div class="cardboard" v-if="trips.length">
             <tripArticle
             v-for="article, index in 1"
             v-bind:article="trips[index]"
@@ -57,7 +57,7 @@ let upnext = {
             <button @click="modifyTrip" v-if="editing" id="modButton" v-bind:style="{'margin-left': '40%', 'margin-bottom': '10px'}">Modify trip</button>
         </div>
         <!-- For-loop alle ganger untatt den første. Sortert etter dato. -->
-        <div class="cardboard">
+        <div class="cardboard" v-if="trips.length">
             <tripArticle
             v-for="article, index in trips.length-1"
             v-bind:article="trips[index+1]" 
@@ -70,10 +70,7 @@ let upnext = {
     `,
     data: function(){
         return {
-            trips: [{tripid: 2, city: "Los Angeles", country: "USA", continent: "North America", date: "2021-05-12", description: "This is a long and nice description of all the trips. It is only temporarily because I need some text for demonstration", image: "this.image", favorite: false, finished: false, userid: 1},
-                    {tripid: 3, city: "San Diego", country: "USA", continent: "North America", date: "2021-06-12", description: "This is a long and nice description of all the trips. It is only temporarily because I need some text for demonstration", image: "this.image", favorite: false, finished: false, userid: 1},
-                    {tripid: 4, city: "Texas", country: "USA", continent: "North America", date: "2021-07-12", description: "This is a long and nice description of all the trips. It is only temporarily because I need some text for demonstration", image: "this.image", favorite: false, finished: false, userid: 1},
-                    {tripid: 5, city: "Dallas", country: "USA", continent: "North America", date: "2021-08-12", description: "This is a long and nice description of all the trips. It is only temporarily because I need some text for demonstration", image: "this.image", favorite: false, finished: false, userid: 1}],
+            trips: [],
             seen: false,
             newtrip: {
                 tripid: "",
@@ -96,6 +93,13 @@ let upnext = {
             ],
             errors: [],
             editing: false,
+        }
+    },
+    created: async function(){
+        let request = await fetch("/trips");
+        if (request.status == 200){
+            let result = await request.json();
+            this.trips = result;
         }
     },
     methods: {
@@ -125,7 +129,6 @@ let upnext = {
         addTrip: function (e) {
             if (this.validateForm(e)) {
                 console.log("no errors")
-                console.log(this.trips)
                 userid = this.getUserId();
                 this.sendTrip(userid)
             } else {
@@ -166,7 +169,6 @@ let upnext = {
                 trip = this.trips[index+1];
                 this.trips.splice(index+1, 1);
             }
-            console.log(trip)
             let request = await fetch("/trip/" + trip.tripid, {
                 method: "DELETE",
                 headers: {
@@ -181,10 +183,14 @@ let upnext = {
         modifyTrip: async function(e) {
             if (this.validateForm(e)) {
                 let trip = this.trips.find(t=>t.tripid == this.newtrip.tripid);
-                console.log(trip)
                 if (trip) {
                     console.log("Modifying");
-                    trip.tripid = this.newtrip.tripid
+                    trip.city = this.newtrip.city
+                    trip.country = this.newtrip.country
+                    trip.continent = this.newtrip.continent
+                    trip.date = this.newtrip.date
+                    trip.description = this.newtrip.description
+                    trip.image = this.newtrip.image
                 }
                 this.editing = false;
                 this.seen = false;
