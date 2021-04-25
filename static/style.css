@@ -274,5 +274,7 @@ label.fixed {
 }
 
 #serachFilterDiv {
-
+    display: flex;
+    flex-wrap: wrap;
+    float: right;
 }
