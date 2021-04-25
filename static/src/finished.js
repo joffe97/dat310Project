@@ -22,20 +22,21 @@ let finishedtrips = {
             <div id="revisitMenu">
                 <button @click="" id="settingsButton">Settings</button>
                 <div id="serachFilterDiv">
+                    <label for="filter">Filter: </label>
                     <select id="filter" v-model="currFilter">
                         <option v-for="option in filters" v-bind:value="option.value">
                             {{ option.text }}
                         </option>
                     </select><br>
                     <div class="searchdiv">
-                        <input type="text" v-model="search" placeholder="Search by city.."/>
+                        <input type="text" v-model="searchValue" placeholder="Search by city.."/>
                     </div>
                 </div>
             </div>
             <!-- Display old trips -->
             <div class="wrapper">
                 <tripArticle
-                    v-for="article in filteredList"
+                    v-for="article in filteredTrips"
                     v-bind:article="article"
                     >
                 </tripArticle>
@@ -51,19 +52,52 @@ let finishedtrips = {
             ],
             showNrFavorites: 1,
             filters: [
-                { text: 'city', value: 'city' },
-                { text: 'country', value: 'country' },
-                { text: 'continent', value: 'continent' },
+                { text: 'Alphabetically by city', value: 'alphabetically' },
                 { text: 'date', value: 'date' },
             ],
-            currFilter: "",
-            search: "",
-            oldTrips: [{city:"Los Angeles", country:"USA", continent:"North America", date:"2021-05-12", description:"This is going to be the best trip ever. We are visiting some of the most amazing places in the world", image:"imageurl", userid:1}, {city:"Los Boss", country:"USA", continent:"North America", date:"2021-05-12", description:"This is going to be the best trip ever. We are visiting some of the most amazing places in the world", image:"imageurl", userid:1},{city:"Los Tacos", country:"USA", continent:"North America", date:"2021-05-12", description:"This is going to be the best trip ever. We are visiting some of the most amazing places in the world", image:"imageurl", userid:1}],
+            currFilter: 'date',
+            searchValue: "",
+            oldTrips: [{city:"C Los Angeles", country:"USA", continent:"North America", date:"2022-05-12", description:"This is going to be the best trip ever. We are visiting some of the most amazing places in the world", image:"imageurl", userid:1}, {city:"B Los Boss", country:"USA", continent:"North America", date:"2021-05-12", description:"This is going to be the best trip ever. We are visiting some of the most amazing places in the world", image:"imageurl", userid:1},{city:"A Los Tacos", country:"USA", continent:"North America", date:"2023-05-12", description:"This is going to be the best trip ever. We are visiting some of the most amazing places in the world", image:"imageurl", userid:1}],
         }
     },
     computed: {
-        filteredList() {
-            return (this.oldTrips.filter(trip => { return trip.city.toLowerCase().includes(this.search.toLowerCase())})
-        )}
+        filteredTrips() {
+            let tmpTrips = this.oldTrips
+            // Handle search input
+            if (this.searchValue != '' && this.searchValue) {
+                tmpTrips = tmpTrips.filter((trip) => {
+                  return trip.city
+                    .toLowerCase()
+                    .includes(this.searchValue.toLowerCase())
+                })
+              }  
+            // Sort by alphabetical order
+                tmpTrips = tmpTrips.sort((a, b) => {
+                    if (this.currFilter == 'alphabetically') {
+                        let fa = a.city.toLowerCase(), fb = b.city.toLowerCase()
+                  
+                      if (fa < fb) {
+                        return -1
+                      }
+                      if (fa > fb) {
+                        return 1 
+                      }
+                      return 0
+                      
+                      // Sort by date
+                    } else if (this.currFilter == 'date') {
+                        let fa = new Date(a.date), fb = new Date(b.date)
+                        if (fa < fb) {
+                            return -1
+                          }
+                          if (fa > fb) {
+                            return 1 
+                          }
+                          return 0
+                    }
+                })
+                
+                return tmpTrips
+        }
     },
 }
