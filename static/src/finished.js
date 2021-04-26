@@ -14,6 +14,15 @@ let finishedtrips = {
                     </option>
                 </select><br>
             </div>
+            <!-- Display favorite trips -->
+            <div class="wrapper">
+                <favArticle
+                    v-for="article,index in favTrips"
+                    v-bind:article="article"
+                    @togglefav="togglefav(favTrips[index])"
+                    >
+                </favArticle>
+            </div>
             <!-- Old Trips Banner -->
             <div class="image-box">
                 <img :src="'static/images/RevisitTrips.png'" alt="RevisitBanner"/>
@@ -42,7 +51,6 @@ let finishedtrips = {
                     >
                 </favArticle>
             </div>
-            <p v-for="trip in oldTrips"> {{trip}}</p>
         </div>
     `,
     data: function(){
@@ -51,6 +59,7 @@ let finishedtrips = {
                 { text: '1', value: 1 },
                 { text: '2', value: 2 },
                 { text: '3', value: 3 },
+                { text: 'all', value: 'all' },
             ],
             showNrFavorites: 1,
             filters: [
@@ -60,6 +69,8 @@ let finishedtrips = {
             currFilter: 'date',
             searchValue: "",
             oldTrips: [],
+            favTrips: [],
+            otherTrips: [],
         }
     },
     created: async function(){
@@ -68,11 +79,13 @@ let finishedtrips = {
             let result = await request.json();
             this.oldTrips = result;
         }
+        this.favoriteTrips()
     },
     methods: {
         togglefav: async function(trip) {
             if (trip){
                 console.log("updating");
+                // gjøre noe her for å automatisk oppdatere utseende? Gir kun info hver gang for-loopen kjører.
             }
             let request = await fetch("/favTrip/" + trip.tripid, {
                 method: "PUT",
@@ -84,12 +97,27 @@ let finishedtrips = {
             if (request.status == 200){
                 let result = await request.text();
                 console.log(result);
+                if (trip.tripid == result.tripid){
+                    trip.favorite = result.favorite;
+                }
+            }
+            this.favoriteTrips()
+        },
+        favoriteTrips: function() {
+            this.favTrips = []
+            this.otherTrips = []
+            for (let i=0; i<this.oldTrips.length; i++) {
+                if (this.oldTrips[i].favorite === 1) {
+                    this.favTrips.push(this.oldTrips[i])
+                } else {
+                    this.otherTrips.push(this.oldTrips[i])
+                }
             }
         }
     },
     computed: {
         filteredTrips() {
-            let tmpTrips = this.oldTrips
+            let tmpTrips = this.otherTrips
             // Handle search input
             if (this.searchValue != '' && this.searchValue) {
                 tmpTrips = tmpTrips.filter((trip) => {
