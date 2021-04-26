@@ -35,12 +35,14 @@ let finishedtrips = {
             </div>
             <!-- Display old trips -->
             <div class="wrapper">
-                <tripArticle
-                    v-for="article in filteredTrips"
+                <favArticle
+                    v-for="article,index in filteredTrips"
                     v-bind:article="article"
+                    @togglefav="togglefav(filteredTrips[index])"
                     >
-                </tripArticle>
+                </favArticle>
             </div>
+            <p v-for="trip in oldTrips"> {{trip}}</p>
         </div>
     `,
     data: function(){
@@ -57,7 +59,32 @@ let finishedtrips = {
             ],
             currFilter: 'date',
             searchValue: "",
-            oldTrips: [{city:"C Los Angeles", country:"USA", continent:"North America", date:"2022-05-12", description:"This is going to be the best trip ever. We are visiting some of the most amazing places in the world", image:"imageurl", userid:1}, {city:"B Los Boss", country:"USA", continent:"North America", date:"2021-05-12", description:"This is going to be the best trip ever. We are visiting some of the most amazing places in the world", image:"imageurl", userid:1},{city:"A Los Tacos", country:"USA", continent:"North America", date:"2023-05-12", description:"This is going to be the best trip ever. We are visiting some of the most amazing places in the world", image:"imageurl", userid:1}],
+            oldTrips: [],
+        }
+    },
+    created: async function(){
+        let request = await fetch("/trips");
+        if (request.status == 200){
+            let result = await request.json();
+            this.oldTrips = result;
+        }
+    },
+    methods: {
+        togglefav: async function(trip) {
+            if (trip){
+                console.log("updating");
+            }
+            let request = await fetch("/favTrip/" + trip.tripid, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(trip)
+            });
+            if (request.status == 200){
+                let result = await request.text();
+                console.log(result);
+            }
         }
     },
     computed: {

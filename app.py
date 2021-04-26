@@ -1,4 +1,4 @@
-from setup_db import add_trip, delete_trip_by_id, get_all_trips, updateTrip_by_id
+from setup_db import add_trip, delete_trip_by_id, get_all_trips, updateFavorite, updateTrip_by_id
 from flask import Flask, url_for, request, abort, g
 import sqlite3
 import json
@@ -77,6 +77,28 @@ def updateTrip(tripid):
         #not found
         abort(404, "Trip not found")
     return "Trip {} updated!".format(tripid)
+
+#Update favorite trip:
+@app.route("/favTrip/<int:tripid>", methods=["PUT"])
+def updateFav(tripid):
+    data = request.get_json()
+    if data.get("tripid", "") == "":
+        abort(400, "No trip submitted")
+    conn = get_db()
+    alltrips = get_all_trips(conn, 1) #Endre med skikkelig UID!!!
+    for trip in alltrips:
+        print(trip["tripid"])
+        if trip["tripid"] == tripid:
+            if trip["favorite"] == False:
+                updateFavorite(conn, tripid, 1, True) # Endre med skikkelig UID!!!
+            else:
+                updateFavorite(conn, tripid, 1, False) # Endre med skikkelig UID!!!
+            print(get_trip_by_id(conn, tripid))
+            break
+    else:
+        #not found
+        abort(404, "Trip not found")
+    return "Trip {} favorite updated!".format(tripid)
 
 @app.route("/")
 def index():

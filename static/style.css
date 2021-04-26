@@ -239,6 +239,14 @@ footer .contact a {
     text-align: center;
 }
 
+#delModFavDiv {
+    text-align: center;
+}
+#delModFavDiv a {
+    padding: 7%;
+    color: #335c81;
+}
+
 /** Add trip div **/
 #adddiv {
     background-color: #f2f2f2;

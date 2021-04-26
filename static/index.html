@@ -13,6 +13,7 @@
     <script src="static/src/finished.js"></script>
     <script src="static/src/statistics.js"></script>
     <script src="static/src/articleC.js"></script>
+    <script src="static/src/favArticle.js"></script>
 
     <script src="static/src/data.js"></script>
 
@@ -68,6 +69,7 @@
         });
         app.use(router);
         app.component('tripArticle', articleC);
+        app.component('favArticle', favC);
         app.mount("#app")    
     </script>
 </body>
