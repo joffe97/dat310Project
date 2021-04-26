@@ -17,10 +17,15 @@ let favC = {
                     href="javascript:void(0);"
                     @click="$emit('delete')"
                     >Delete</a>
-                    <button @click="$emit('togglefav')" ><i v-bind:class="[article.favorite==1 ?  'fa-heart' : 'fa-heart-o', 'fa']" aria-hidden="true"></i></button>
+                    <button @click="$emit('togglefav')" ><i v-bind:class="[is_fav==1 ?  'fa-heart' : 'fa-heart-o', 'fa']" aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
     </div>
     `,
+    computed: {
+        is_fav() {
+            return this.article.favorite;
+        }
+    }
 }

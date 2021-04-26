@@ -59,7 +59,6 @@ let finishedtrips = {
                 { text: '1', value: 1 },
                 { text: '2', value: 2 },
                 { text: '3', value: 3 },
-                { text: 'all', value: 'all' },
             ],
             showNrFavorites: 1,
             filters: [
@@ -83,25 +82,27 @@ let finishedtrips = {
     },
     methods: {
         togglefav: async function(trip) {
-            if (trip){
-                console.log("updating");
-                // gjøre noe her for å automatisk oppdatere utseende? Gir kun info hver gang for-loopen kjører.
-            }
-            let request = await fetch("/favTrip/" + trip.tripid, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(trip)
-            });
-            if (request.status == 200){
-                let result = await request.text();
-                console.log(result);
-                if (trip.tripid == result.tripid){
-                    trip.favorite = result.favorite;
+            if (this.favTrips.length >= 3 && trip.favorite === 0) {
+                alert("You can only have three favorites. Remove one favorite and try again")
+            } else {
+                if (trip){
+                    console.log("updating");
+                    // gjøre noe her for å automatisk oppdatere utseende? Gir kun info hver gang for-loopen kjører.
+                    trip.favorite = !trip.favorite
                 }
+                let request = await fetch("/favTrip/" + trip.tripid, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(trip)
+                });
+                if (request.status == 200){
+                    let result = await request.text();
+                    console.log(result);
+                }
+                this.favoriteTrips()
             }
-            this.favoriteTrips()
         },
         favoriteTrips: function() {
             this.favTrips = []
