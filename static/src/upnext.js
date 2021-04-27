@@ -4,16 +4,15 @@ let upnext = {
          <!-- Next Trip banner -->
         <div class="image-box" v-if="trips.length">
             <img src="static/images/Nextbanner.png" alt="NextTripBanner"/>
-            <p v-if="daysUntilNextTrip===1" v-bind:style="{'position':'absolute', 'top':'50%', 'left':'50%', 'transform': 'translate(-50%, -50%)', 'color':'white', 'font-size':'25px', 'margin': '0', 'margin-top':'1%'}" >{{daysUntilNextTrip}} day!</p>
+            <p v-if="daysUntilNextTrip===1" v-bind:style="{'position':'absolute', 'top':'4.5%', 'left':'50%', 'transform': 'translate(-50%, -50%)', 'color':'white', 'font-size':'25px', 'margin': '0', 'margin-top':'1%'}" >{{daysUntilNextTrip}} day!</p>
             <p v-bind:style="{'position':'absolute', 'top':'4.5%', 'left':'48%', 'transform': 'translate(-50%, -50%)', 'color':'white', 'font-size':'25px', 'margin': '0', 'margin-top':'1%'}"  v-else>{{nextTrip}} days!</p>
         </div>
         <!-- For-loop kjørt en gang. Sortert etter dato. -->
         <div class="wrapper" v-if="trips.length">
             <tripArticle
-            v-for="article, index in 1"
-            v-bind:article="trips[index]"
-            v-on:delete="deleteTrip(index, true)" 
-            v-on:modify="editInfo(trips[index])" 
+            v-bind:article="trips[0]"
+            v-on:delete="deleteTrip(0, true)" 
+            v-on:modify="editInfo(trips[0])" 
             >
             </tripArticle>
         </div>
@@ -114,6 +113,22 @@ let upnext = {
         }
     },
     methods: {
+        getAlltrips: async function() {
+            let request = await fetch("/trips");
+            if (request.status == 200){
+                let result = await request.json();
+                //this.trips = result;
+                let tmpList = []
+                for (let i=0; i<result.length; i++) {
+                    if (result[i].finished === 0) {
+                        tmpList.push(result[i])
+                    }
+                }
+                this.trips = tmpList
+                this.finishedTrips()
+                this.sortedTripsByDate()
+            }
+        },
         finishedTrips: function() {
             let now = new Date();
             for (let i=0;i<this.trips.length;i++) {
@@ -167,6 +182,9 @@ let upnext = {
                 console.log("no errors")
                 userid = this.getUserId();
                 this.sendTrip(userid)
+                this.getAlltrips()
+                this.resetInputs()
+                this.seen = false
             } else {
                 console.log("errors")
             }
@@ -193,29 +211,30 @@ let upnext = {
                 if (new_trip.city == result.city && new_trip.date == result.date){
                     new_trip.tripid = result.tripid;
                 }
-                this.sortedTripsByDate()
             }
         },
         deleteTrip: async function(index, first) {
             // first-attribute is to check if the trip is the next trip or not. 
             // Because of the for-loop, the index varies according to the trips index
-            let trip = ""
-            if (first) {
-                trip = this.trips[index];
-                this.trips.splice(index, 1);
-            } else {
-                trip = this.trips[index+1];
-                this.trips.splice(index+1, 1);
-            }
-            let request = await fetch("/trip/" + trip.tripid, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
+            if(confirm("Are you sure that you want to delete?")) {
+                let trip = ""
+                if (first) {
+                    trip = this.trips[index];
+                    this.trips.splice(index, 1);
+                } else {
+                    trip = this.trips[index+1];
+                    this.trips.splice(index+1, 1);
                 }
-            });
-            if (request.status == 200){
-                let result = await request.text();
-                console.log(result);
+                let request = await fetch("/trip/" + trip.tripid, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+                if (request.status == 200){
+                    let result = await request.text();
+                    console.log(result);
+                }
             }
         },
         modifyTrip: async function(e) {
@@ -244,6 +263,7 @@ let upnext = {
                     let result = await request.text();
                     console.log(result);
                 }
+                this.getAlltrips()
             }
         },
         editInfo: function(trip) {
@@ -283,6 +303,7 @@ let upnext = {
             this.daysUntilNextTrip = Math.round(( Date.parse(nextTripDate) - Date.parse(dateToday) )/(1000*60*60*24));
             console.log(this.daysUntilNextTrip)
             return this.daysUntilNextTrip
+            // Trenger man egentlig this.daysuntil...
         },
     }
 }

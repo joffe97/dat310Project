@@ -142,22 +142,24 @@ let finishedtrips = {
             }
         },
         deleteTrip: async function(trip, ) {
-            let index = 0
-            for (let i=0;i<this.oldTrips.length;i++) {
-                if (trip.tripid === this.oldTrips[i]) {
-                    index = i
+            if(confirm("Are you sure that you want to delete?")) {
+                let index = 0
+                for (let i=0;i<this.oldTrips.length;i++) {
+                    if (trip.tripid === this.oldTrips[i]) {
+                        index = i
+                    }
                 }
-            }
-            this.oldTrips.splice(index, 1);
-            let request = await fetch("/trip/" + trip.tripid, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
+                this.oldTrips.splice(index, 1);
+                let request = await fetch("/trip/" + trip.tripid, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                });
+                if (request.status == 200){
+                    let result = await request.text();
+                    console.log(result);
                 }
-            });
-            if (request.status == 200){
-                let result = await request.text();
-                console.log(result);
             }
         },
         modifyTrip: async function(e) {
@@ -205,7 +207,7 @@ let finishedtrips = {
         }, 
     },
     computed: {
-        filteredTrips() {
+        filteredTrips: function() {
             let tmpTrips = this.oldTrips
             // Handle search input
             if (this.searchValue != '' && this.searchValue) {
