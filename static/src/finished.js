@@ -42,6 +42,22 @@ let finishedtrips = {
                     </div>
                 </div>
             </div>
+            <!-- modify Trip -->
+            <div v-if="seen" v-bind:style="{ background: '#e3f2fd' }">
+                <div class="container">
+                    <form class="box">
+                        <label for="description" class="fixed">Description: </label><input id="description" v-model="oldtrip.description"/><br>
+                        <label for="uploadimage" class="fixed">Image: </label><input type="file" accept="image/*" id="file-input"><br>
+                        <button @click="modifyTrip" type="button" v-if="editing" id="modButton" v-bind:style="{'margin-left': '40%', 'margin-bottom': '10px'}">Modify trip</button>
+                    </form>
+                    <p v-if="errors.length">
+                        <b>Please correct the following error(s) before submitting:</b>
+                        <ul>
+                            <li v-for="error in errors">{{ error }}</li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
             <!-- Display old trips -->
             <div class="wrapper">
                 <favArticle
@@ -49,6 +65,7 @@ let finishedtrips = {
                     v-bind:article="article"
                     @togglefav="togglefav(filteredTrips[index])"
                     @delete="deleteTrip(article)"
+                    v-on:modify="editInfo(article)" 
                     >
                 </favArticle>
             </div>
@@ -71,6 +88,14 @@ let finishedtrips = {
             oldTrips: [],
             favTrips: [],
             otherTrips: [],
+            errors: [],
+            oldtrip: {
+                tripid: "",
+                description: "",
+                image: "",
+            },
+            seen: false,
+            editing: false,
         }
     },
     created: async function(){
@@ -135,6 +160,49 @@ let finishedtrips = {
                 console.log(result);
             }
         },
+        modifyTrip: async function(e) {
+            if (this.validateForm(e)) {
+                let trip = this.oldTrips.find(t=>t.tripid == this.oldtrip.tripid);
+                if (trip) {
+                    console.log("Modifying");
+                    trip.description = this.oldtrip.description
+                    trip.image = this.oldtrip.image
+                }
+                this.editing = false;
+                this.seen = false;
+                //this.resetInputs();
+                let request = await fetch("/trip/" + trip.tripid, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(trip)
+                });
+                if (request.status == 200){
+                    let result = await request.text();
+                    console.log(result);
+                }
+            }
+        },
+        editInfo: function(trip) {
+            this.seen = true;
+            this.oldtrip.tripid = trip.tripid;
+            this.oldtrip.description = trip.description;
+            this.oldtrip.image = trip.image;
+            this.editing = true;
+            this.seen = true;
+        },
+        validateForm: function (e) {
+            this.errors = [];
+            if (!this.oldtrip.description) {
+                this.errors.push("Description required");
+            }
+            //NEED VALIDATION FOR IMAGE
+            if (!this.errors.length) {
+                return true;
+            }
+            e.preventDefault();
+        }, 
     },
     computed: {
         filteredTrips() {
