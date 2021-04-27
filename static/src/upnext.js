@@ -113,22 +113,6 @@ let upnext = {
         }
     },
     methods: {
-        getAlltrips: async function() {
-            let request = await fetch("/trips");
-            if (request.status == 200){
-                let result = await request.json();
-                //this.trips = result;
-                let tmpList = []
-                for (let i=0; i<result.length; i++) {
-                    if (result[i].finished === 0) {
-                        tmpList.push(result[i])
-                    }
-                }
-                this.trips = tmpList
-                this.finishedTrips()
-                this.sortedTripsByDate()
-            }
-        },
         finishedTrips: function() {
             let now = new Date();
             for (let i=0;i<this.trips.length;i++) {
@@ -276,6 +260,22 @@ let upnext = {
             this.newtrip.image = trip.image;
             this.editing = true;
             this.seen = true;
+        },
+        getAlltrips: async function() {
+            let request = await fetch("/trips");
+            if (request.status == 200){
+                let result = await request.json();
+                //this.trips = result;
+                let tmpList = []
+                for (let i=0; i<result.length; i++) {
+                    if (result[i].finished === 0) {
+                        tmpList.push(result[i])
+                    }
+                }
+                this.trips = tmpList
+                this.finishedTrips()
+                this.sortedTripsByDate()
+            }
         },
         resetInputs: function() {
             this.newtrip.tripid = "";

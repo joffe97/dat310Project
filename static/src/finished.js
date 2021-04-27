@@ -112,19 +112,6 @@ let finishedtrips = {
         }
     },
     methods: {
-        getAllTrips: async function() {
-            let request = await fetch("/trips");
-            if (request.status == 200){
-                let result = await request.json();
-                tmpList = []
-                for (let i=0; i<result.length; i++) {
-                    if (result[i].finished === 1) {
-                        tmpList.push(result[i])
-                    }
-                }
-                this.oldTrips = tmpList
-            }
-        },
         togglefav: async function(trip) {
             this.nrfavTrips = 0
             for (let i=0;i<this.oldTrips.length;i++) {
@@ -220,6 +207,19 @@ let finishedtrips = {
             }
             e.preventDefault();
         }, 
+        getAllTrips: async function() {
+            let request = await fetch("/trips");
+            if (request.status == 200){
+                let result = await request.json();
+                tmpList = []
+                for (let i=0; i<result.length; i++) {
+                    if (result[i].finished === 1) {
+                        tmpList.push(result[i])
+                    }
+                }
+                this.oldTrips = tmpList
+            }
+        },
     },
     computed: {
         filteredTrips: function() {
