@@ -154,8 +154,9 @@ footer .contact a {
 
 /** Trip-article **/
 .card {
-    border: 2px dotted #E9E9E9;
+    border: 2px dotted #335c81;
     background-color: white;
+    /**background-image: linear-gradient(#ffffff, #335d8125);**/
     position: absolute;
     left: 0;
     right: 0;
@@ -164,7 +165,7 @@ footer .contact a {
     margin: 5px;
     box-shadow: 2px 2px #e9e9e9;
     border-radius: 10px;
-    flex-grow: 1
+    flex-grow: 1;
 }
 
 .outer {
