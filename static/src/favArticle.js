@@ -14,6 +14,7 @@ let favC = {
                     @click="$emit('modify')" 
                     >Modify</a>
                     <a
+                    v-if="is_fav===0"
                     href="javascript:void(0);"
                     @click="$emit('delete')"
                     >Delete</a>

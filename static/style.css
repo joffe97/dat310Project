@@ -11,6 +11,7 @@ body {
     display:flex;
     flex-direction: column;
     align-content: space-between;
+    background-color: #d6e5e3;
 }
 
 .flexbox {
@@ -185,7 +186,7 @@ footer .contact a {
 .wrapper {
     display: flex;
     flex-wrap: wrap;
-    background-color: #e3f2fd;
+    background-color: #d6e5e3;
     margin: auto;
     width: 100%;
     perspective: 1000px;
@@ -204,7 +205,7 @@ footer .contact a {
     width: 80%;
     height: 50%;
     margin-top: 3%;
-    border: 3px solid #e3f2fd;
+    border: 3px solid #d6e5e3;
     border-radius: 10px;
 }
 
