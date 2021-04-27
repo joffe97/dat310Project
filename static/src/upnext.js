@@ -2,10 +2,10 @@ let upnext = {
     template: /*html*/`
     <div class="content">
          <!-- Next Trip banner -->
-        <div class="image-box">
+        <div class="image-box" v-if="trips.length">
             <img src="static/images/Nextbanner.png" alt="NextTripBanner"/>
             <p v-if="daysUntilNextTrip===1" v-bind:style="{'position':'absolute', 'top':'50%', 'left':'50%', 'transform': 'translate(-50%, -50%)', 'color':'white', 'font-size':'25px', 'margin': '0', 'margin-top':'1%'}" >{{daysUntilNextTrip}} day!</p>
-            <p v-bind:style="{'position':'absolute', 'top':'4.5%', 'left':'48%', 'transform': 'translate(-50%, -50%)', 'color':'white', 'font-size':'25px', 'margin': '0', 'margin-top':'1%'}"  v-else>{{daysUntilNextTrip}} days!</p>
+            <p v-bind:style="{'position':'absolute', 'top':'4.5%', 'left':'48%', 'transform': 'translate(-50%, -50%)', 'color':'white', 'font-size':'25px', 'margin': '0', 'margin-top':'1%'}"  v-else>{{nextTrip}} days!</p>
         </div>
         <!-- For-loop kjørt en gang. Sortert etter dato. -->
         <div class="wrapper" v-if="trips.length">
@@ -110,7 +110,6 @@ let upnext = {
             }
             this.trips = tmpList
             this.finishedTrips()
-            this.nextTrip()
             this.sortedTripsByDate()
         }
     },
@@ -181,7 +180,6 @@ let upnext = {
             let new_trip = Vue.reactive({tripid: null, city: this.newtrip.city, country: this.newtrip.country, continent: this.newtrip.continent, date: this.newtrip.date, description: this.newtrip.description, image: this.newtrip.image, favorite: false, finished: false, userid: uid});
             this.trips.push(new_trip);
             this.finishedTrips()
-            this.nextTrip()
             let request = await fetch("/trips", {
                 method: "POST",
                 headers: {
@@ -245,7 +243,6 @@ let upnext = {
                 if (request.status == 200){
                     let result = await request.text();
                     console.log(result);
-                    this.nextTrip()
                 }
             }
         },
@@ -269,7 +266,14 @@ let upnext = {
             this.newtrip.description = "";
             this.newtrip.image = "";
         },
+        sortedTripsByDate: function() {
+            return this.trips.sort((a, b) => new Date(a.date) - new Date(b.date))
+        },   
+    },
+    computed: {
         nextTrip: function() {
+            console.log("turen")
+            console.log(this.trips)
             let tripDate = new Date(this.trips[0].date);
             let nextTripDate = tripDate.getFullYear()+'-'+(tripDate.getMonth()+1)+'-'+tripDate.getDate();
             console.log(nextTripDate)
@@ -278,9 +282,7 @@ let upnext = {
             console.log(dateToday)
             this.daysUntilNextTrip = Math.round(( Date.parse(nextTripDate) - Date.parse(dateToday) )/(1000*60*60*24));
             console.log(this.daysUntilNextTrip)
+            return this.daysUntilNextTrip
         },
-        sortedTripsByDate: function() {
-            return this.trips.sort((a, b) => new Date(a.date) - new Date(b.date))
-        },   
-    },
+    }
 }
