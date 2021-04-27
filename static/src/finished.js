@@ -20,6 +20,8 @@ let finishedtrips = {
                     v-for="article,index in favTrips"
                     v-bind:article="article"
                     @togglefav="togglefav(favTrips[index])"
+                    @delete="deleteTrip(article)"
+                    @modify="editInfo(article)" 
                     >
                 </favArticle>
             </div>
