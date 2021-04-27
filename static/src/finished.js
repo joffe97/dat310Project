@@ -48,6 +48,7 @@ let finishedtrips = {
                     v-for="article,index in filteredTrips"
                     v-bind:article="article"
                     @togglefav="togglefav(filteredTrips[index])"
+                    @delete="deleteTrip(article)"
                     >
                 </favArticle>
             </div>
@@ -114,7 +115,26 @@ let finishedtrips = {
                     this.otherTrips.push(this.oldTrips[i])
                 }
             }
-        }
+        },
+        deleteTrip: async function(trip, ) {
+            let index = 0
+            for (let i=0;i<this.oldTrips.length;i++) {
+                if (trip.tripid === this.oldTrips[i]) {
+                    index = i
+                }
+            }
+            this.oldTrips.splice(index, 1);
+            let request = await fetch("/trip/" + trip.tripid, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            if (request.status == 200){
+                let result = await request.text();
+                console.log(result);
+            }
+        },
     },
     computed: {
         filteredTrips() {
