@@ -155,7 +155,7 @@ def updateFavorite(conn, tripid, userid, favorite):
     finally:
         cur.close()
 
-def updateFinished(conn, tripid, userid, finished):
+def updateFinish(conn, tripid, userid, finished):
     cur = conn.cursor()
     try:
         sql = ("UPDATE trips SET finished=?  WHERE userid=? AND tripid=?")
@@ -267,4 +267,7 @@ if __name__ == "__main__":
         add_trip(conn, "Tokyo", "Japan", "Asia", "2022-06-13", "This trip is going to be ever better than the previous one! Im sure of it. Can't believe this is happening!!!!", "imageurl", 1)
         add_trip(conn, "Paris", "France", "Europe", "2022-03-14", "It gets even better. I really look forward to this trip! Im not quite sure what I want to do, but I'm super exited.", "imageurl", 1)
         add_trip(conn, "London", "England", "Europe", "2021-11-01", "I feel to lucky to be able to visit this beautiful city. It is so exiting. I can't even sleep.", "imageurl", 1)
+        add_trip(conn, "Seoul", "South Korea", "Asia", "2019-11-01", "I feel to lucky to be able to visit this beautiful city. It is so exiting. I can't even sleep.", "imageurl", 1)
+        add_trip(conn, "Lima", "Peru", "South America", "2018-11-01", "I feel to lucky to be able to visit this beautiful city. It is so exiting. I can't even sleep.", "imageurl", 1)
+        add_trip(conn, "Rio De Janeiro","Brazil", "South America", "2017-11-01", "I feel to lucky to be able to visit this beautiful city. It is so exiting. I can't even sleep.", "imageurl", 1)
         conn.close()

@@ -17,9 +17,9 @@ let finishedtrips = {
             <!-- Display favorite trips -->
             <div class="wrapper">
                 <favArticle
-                    v-for="article,index in favTrips"
+                    v-for="article,index in oldTrips"
                     v-bind:article="article"
-                    @togglefav="togglefav(favTrips[index])"
+                    @togglefav="togglefav(oldTrips[index])"
                     @modify="editInfo(article)" 
                     >
                 </favArticle>
@@ -61,14 +61,14 @@ let finishedtrips = {
             </div>
             <!-- Display old trips -->
             <div class="wrapper">
-                <favArticle
+                <notFavArticle
                     v-for="article,index in filteredTrips"
                     v-bind:article="article"
                     @togglefav="togglefav(filteredTrips[index])"
                     @delete="deleteTrip(article)"
                     v-on:modify="editInfo(article)" 
                     >
-                </favArticle>
+                </notFavArticle>
             </div>
         </div>
     `,
@@ -87,8 +87,6 @@ let finishedtrips = {
             currFilter: 'date',
             searchValue: "",
             oldTrips: [],
-            favTrips: [],
-            otherTrips: [],
             errors: [],
             oldtrip: {
                 tripid: "",
@@ -97,19 +95,31 @@ let finishedtrips = {
             },
             seen: false,
             editing: false,
+            nrfavTrips: 0,
         }
     },
     created: async function(){
         let request = await fetch("/trips");
         if (request.status == 200){
             let result = await request.json();
-            this.oldTrips = result;
+            tmpList = []
+            for (let i=0; i<result.length; i++) {
+                if (result[i].finished === 1) {
+                    tmpList.push(result[i])
+                }
+            }
+            this.oldTrips = tmpList
         }
-        this.favoriteTrips()
     },
     methods: {
         togglefav: async function(trip) {
-            if (this.favTrips.length >= 3 && trip.favorite === 0) {
+            this.nrfavTrips = 0
+            for (let i=0;i<this.oldTrips.length;i++) {
+                if (this.oldTrips[i].favorite === 1) {
+                    this.nrfavTrips ++
+                }
+            }
+            if (this.nrfavTrips >= 3 && trip.favorite === 0) {
                 alert("You can only have three favorites. Remove one favorite and try again")
             } else {
                 if (trip){
@@ -127,18 +137,7 @@ let finishedtrips = {
                 if (request.status == 200){
                     let result = await request.text();
                     console.log(result);
-                }
-                this.favoriteTrips()
-            }
-        },
-        favoriteTrips: function() {
-            this.favTrips = []
-            this.otherTrips = []
-            for (let i=0; i<this.oldTrips.length; i++) {
-                if (this.oldTrips[i].favorite === 1) {
-                    this.favTrips.push(this.oldTrips[i])
-                } else {
-                    this.otherTrips.push(this.oldTrips[i])
+                    // Need to do something with the result? Maybe that will make it update?
                 }
             }
         },
@@ -207,7 +206,7 @@ let finishedtrips = {
     },
     computed: {
         filteredTrips() {
-            let tmpTrips = this.otherTrips
+            let tmpTrips = this.oldTrips
             // Handle search input
             if (this.searchValue != '' && this.searchValue) {
                 tmpTrips = tmpTrips.filter((trip) => {

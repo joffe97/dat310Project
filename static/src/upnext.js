@@ -101,13 +101,46 @@ let upnext = {
         let request = await fetch("/trips");
         if (request.status == 200){
             let result = await request.json();
-            this.trips = result;
-            this.sortedTripsByDate()
+            //this.trips = result;
+            let tmpList = []
+            for (let i=0; i<result.length; i++) {
+                if (result[i].finished === 0) {
+                    tmpList.push(result[i])
+                }
+            }
+            this.trips = tmpList
+            this.finishedTrips()
             this.nextTrip()
+            this.sortedTripsByDate()
         }
     },
     methods: {
-        validateForm: function (e) {
+        finishedTrips: function() {
+            let now = new Date();
+            for (let i=0;i<this.trips.length;i++) {
+                if (new Date(this.trips[i].date) < now && this.trips[i].finished === 0) {
+                    this.makeFinished(this.trips[i])
+                }
+            }
+        },
+        makeFinished: async function(trip) {
+            if (trip){
+                console.log("updating");
+                trip.finished = !trip.finished
+            }
+            let request = await fetch("/finishedTrip/" + trip.tripid, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(trip)
+            });
+            if (request.status == 200){
+                let result = await request.text();
+                console.log(result);
+            }
+        },
+        validateForm: function(e) {
             this.errors = [];
             if (!this.newtrip.city) {
               this.errors.push("City required");
@@ -147,6 +180,8 @@ let upnext = {
         sendTrip: async function(uid) {
             let new_trip = Vue.reactive({tripid: null, city: this.newtrip.city, country: this.newtrip.country, continent: this.newtrip.continent, date: this.newtrip.date, description: this.newtrip.description, image: this.newtrip.image, favorite: false, finished: false, userid: uid});
             this.trips.push(new_trip);
+            this.finishedTrips()
+            this.nextTrip()
             let request = await fetch("/trips", {
                 method: "POST",
                 headers: {
@@ -161,7 +196,6 @@ let upnext = {
                     new_trip.tripid = result.tripid;
                 }
                 this.sortedTripsByDate()
-                this.nextTrip()
             }
         },
         deleteTrip: async function(index, first) {
