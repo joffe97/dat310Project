@@ -148,7 +148,7 @@ footer .contact a {
 /** Fix content so that is do not overlap with navbar menu **/
 @media screen and (max-width: 800px) {
     .content {
-        margin-top: 230px;
+        margin-top: 150px;
     }
 }
 
@@ -287,4 +287,105 @@ label.fixed {
     display: flex;
     flex-wrap: wrap;
     float: right;
+}
+
+/** Statistics **/
+main {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+}
+
+main>* {
+    margin: 5px;
+}
+
+main h1 {
+    background-color: #BCBCBC;
+    color: white;
+    padding: 5px;
+    font-size: 1.2em;
+}
+aside {
+    background-color: #335c81;
+    min-width: 35%;
+    padding: 5px;
+    color:#E9E9E9;
+}
+
+aside h3 {
+    color:#E9E9E9;
+    text-align: center;
+}
+
+aside .country-table {
+    max-width: 500px;
+    padding: 5px;
+    text-align: center;
+    margin-left:10px;
+}
+
+aside .country-table td {
+    border-top: 1px dotted #E9E9E9;
+    padding:5px;
+    color:#E9E9E9;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/** Pie Chart **/
+.pie-chart {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    border: 2px solid black;
+    animation: show 1s ease-in-out;
+}
+.pie_right {
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 1000px) {
+    .pie_right {
+        flex-direction:row;
+        justify-content:space-between;
+    }
+    .boxcontainer {
+        padding: 8px;
+    }
+}
+
+@keyframes show {
+    0% {
+        transform: scale(0) rotate(360deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.colorbox {
+    height: 20px;
+    width: 20px;
+    border: 1px solid black;
+    clear: both;
+    margin: 0;
+
+}
+
+.boxcontainer {
+    display: flex;
+    flex-direction: row;
+    justify-content:left;
+    animation: show 1s ease-in-out;
+}
+
+.boxcontainer p {
+    margin-top: 4%;
+    margin-left: 3%;
+    
 }

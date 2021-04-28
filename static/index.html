@@ -15,6 +15,7 @@
     <script src="static/src/articleC.js"></script>
     <script src="static/src/favArticle.js"></script>
     <script src="static/src/notFav.js"></script>
+    <script src="static/src/pieChart.js"></script>
 
     <script src="static/src/data.js"></script>
 
@@ -49,6 +50,7 @@
     </div>
 
     <script>
+        //import MapChart from 'vue-map-chart'
         let app = Vue.createApp({
             data: function(){
                 return {
@@ -72,6 +74,7 @@
         app.component('tripArticle', articleC);
         app.component('favArticle', favC);
         app.component('notFavArticle', notFavC);
+        app.component('pieChart', pieC);
         app.mount("#app")    
     </script>
 </body>
