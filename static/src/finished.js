@@ -30,7 +30,7 @@ let finishedtrips = {
             </div>
             <!-- Old trips mini menu -->
             <div id="revisitMenu">
-                <button @click="" id="settingsButton">Settings</button>
+                <button @click="showSettings = !showSettings" id="settingsButton">Settings</button>
                 <div id="serachFilterDiv">
                     <label for="filter">Filter: </label>
                     <select id="filter" v-model="currFilter">
@@ -59,11 +59,38 @@ let finishedtrips = {
                     </p>
                 </div>
             </div>
+            <!-- Settings panel -->
+            <div v-if="showSettings" v-bind:style="{ background: '#e3f2fd' }">
+                <div class="container">
+                    <form class="box">
+                        <label for="color" class="fixed">Color:</label>
+                        <select id="color" v-model="style.backgroundColor">
+                            <option v-for="option in colors" v-bind:value="option.value">
+                                {{ option.text }}
+                            </option>
+                        </select><br>
+                        <label for="border" class="fixed">Border:</label>
+                        <select id="border" v-model="style.borderColor">
+                            <option v-for="option in colors" v-bind:value="option.value">
+                                {{ option.text }}
+                            </option>
+                        </select><br>
+                        <label for="fSize" class="fixed">Size:</label>
+                        <select id="fSize" v-model="style.fontSize">
+                            <option v-for="option in sizes" v-bind:value="option.value">
+                                {{ option.text }}
+                            </option>
+                        </select><br>
+                        <button @click="changeSettings" type="button">Change style</button>
+                    </form>
+                </div>
+            </div>
             <!-- Display old trips -->
             <div class="wrapper">
                 <notFavArticle
                     v-for="article,index in filteredTrips"
                     v-bind:article="article"
+                    v-bind:newStyle="style"
                     @togglefav="togglefav(filteredTrips[index])"
                     @delete="deleteTrip(article)"
                     v-on:modify="editInfo(article)" 
@@ -96,6 +123,29 @@ let finishedtrips = {
             seen: false,
             editing: false,
             nrfavTrips: 0,
+            style: {
+                backgroundColor: 'white',
+                fontSize: 16,
+                borderColor: '#335c81'
+            }, 
+            showSettings: false,
+            colors: [
+                { text: 'White', value: 'FFFFFF' },
+                { text: 'Bdazzeled Blue', value: '#335c81' },
+                { text: 'Lavender Gray', value: 'CAC4CE' },
+                { text: 'Key Lime', value: 'E6F9AF' },
+                { text: 'Unbleached Silk', value: 'FFD8BE' },
+                { text: 'Silver Pink', value: 'D0B8AC' },
+                { text: 'Pale Purple Pantone', value: 'F5E5FC' },
+                { text: 'Black Shadows', value: 'BFACB5' },
+                { text: 'Champagne Pink', value: 'E5D0CC' },
+            ],
+            sizes: [
+                { text: '12', value: '12' },
+                { text: '14', value: '14' },
+                { text: '16', value: '16' },
+                { text: '18', value: '18' },
+            ]
         }
     },
     created: async function(){
