@@ -6,18 +6,14 @@ let loginform = {
                     <aside class="loginbox">
                         <div class="loginform">
                             <h2>Log In</h2>
-                            <form @submit="">
+                            <form @submit="checkLogin">
                                 <input id="username" v-model="loginData.username" placeholder="Username" required/><br>
                                 <input type="password" id="password" v-model="loginData.password" placeholder="Password" required/><br>
                                 <input class="loginButtons" type="submit" value="Log In"> 
                                 <button class="loginButtons" type="button" @click="">Register</button>
                             </form>
-                            <p v-if="errors.length">
-                                <b>Please correct the following error(s) before submitting:</b>
-                                <ul>
-                                    <li v-for="error in errors">{{ error }}</li>
-                                </ul>
-                            </p>
+                            <div v-if="proccessing" class="text-center"> Please wait... </div>
+                            <div v-if="invalid" class="text-center"> Invalid username or password</div>
                         </div>
                     </aside>
                     <div>
@@ -38,7 +34,36 @@ let loginform = {
                 username: "",
                 password: "",
             },
-            errors: [],
+            proccessing: false,
+            invalid: false,
+            activeUser: ""
         }
-    }
+    },
+    methods: {
+        checkLogin: async function(e) {
+            this.proccessing = true;
+            this.invalid = false
+            let request = await fetch("/checkUsrPwd", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(this.loginData)
+            });
+            if (request.status == 200){
+                let result = await request.json();
+                // returned data:
+                console.log(result);
+                this.proccessing = false
+                if (result.valid === false) {
+                    this.invalid = true
+                } else {
+                    //this.$emit('successfulllogin')
+                    this.$router.push("/upnext")
+                }
+            }
+            // block the traditional submission of the form.
+            e.preventDefault();
+        },
+    },
 }

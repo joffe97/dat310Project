@@ -42,20 +42,18 @@
         <router-view></router-view>
         <footer class="flexbox">
             <div class="contact">
-                <span class="strong">Customer service:</span> |
-                +47 321 09 87654 |
-                <a href="#">contact@noreply.com</a>
+                <p>Welcome, {{activeUser}}!</p>
             </div>
         </footer class="flexbox">
     </div>
 
     <script>
-        //import MapChart from 'vue-map-chart'
         let app = Vue.createApp({
             data: function(){
                 return {
                     isActive: false,
-                    large: true
+                    large: true,
+                    activeUser: "",
                 }
             },
             methods: {
@@ -67,7 +65,7 @@
                         this.isActive = false;
                         this.large = true;
                     }
-                }
+                },
             },
         });
         app.use(router);

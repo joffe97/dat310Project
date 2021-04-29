@@ -441,3 +441,7 @@ aside .country-table td {
     border-radius: 15px;
     background-color: white;
 }
+
+.text-center {
+    text-align: center;
+}

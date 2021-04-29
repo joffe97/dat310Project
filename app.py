@@ -1,7 +1,8 @@
-from setup_db import add_trip, delete_trip_by_id, get_all_trips, updateFavorite, updateFinish, updateTrip_by_id, get_trip_by_id
-from flask import Flask, url_for, request, abort, g
+from setup_db import add_trip, delete_trip_by_id, get_all_trips, updateFavorite, updateFinish, updateTrip_by_id, get_trip_by_id, get_hash_for_login, get_user_by_name
+from flask import Flask, url_for, request, abort, g, flash, session
 import sqlite3
 import json
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "eawadæniowqno83y7w93m96b3666bsefnalqqaaaknqpidh289n19ncos"
@@ -20,6 +21,45 @@ def teardown_db(error):
     if db is not None:
         print("close connection")
         db.close()
+
+# Check if passwords match
+def valid_login(usr, pwd):
+    """Checks if username and password is valid"""
+    conn = get_db()
+    hash = get_hash_for_login(conn, usr)
+    if hash != None:
+        return check_password_hash(hash, pwd)
+    return False
+
+# Validate Login:
+@app.route("/checkUsrPwd", methods=["POST"])
+def validateLogin():
+    loginData = request.get_json()
+    print("Data: {}".format(loginData)) # Remove this afterwards.
+    if loginData.get("username", "") != "":
+        if valid_login(loginData["username"], loginData["password"]):
+            conn = get_db()
+            user = get_user_by_name(conn,loginData["username"])
+            print(user)
+            session["username"] = user["username"]
+            session["role"] = user["role"]
+            print("User: {} validated".format(loginData["username"]))
+            return {"valid": True}
+        else:
+            return {"valid": False}
+    else: 
+        # bad request return 400 error
+        abort(400, "Missing requirements")
+
+# Get current user:
+@app.route("/user", methods=["GET"])
+def getUser():
+    conn = get_db()
+    if session.get("username", "") != "":
+        user =get_user_by_name(conn, session["username"])
+        print(user)
+        return json.dumps(user)
+    return {"isLoggedIn": False}
 
 # Get all trips from db:
 @app.route("/trips", methods=["GET"])
