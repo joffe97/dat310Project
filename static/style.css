@@ -445,3 +445,39 @@ aside .country-table td {
 .text-center {
     text-align: center;
 }
+
+/** Register site **/
+.registerbox {
+    margin-bottom: 7%;
+    margin-top: 7%;
+    background-color: #335c81;
+    min-width: 45%;
+    color:#E9E9E9;
+    border: 3px solid #424242;
+    border-radius: 15px;
+    box-shadow: 2px 2px #424242;
+}
+#registerbutton {
+    width: 40%;
+    height: 5%;
+    margin-left: 30%;
+    margin-right: 30%;
+    margin-top: 10%;
+    margin-bottom: 40px;
+    border: 1px solid #424242;
+    border-radius: 15px;
+    background-color: white;
+}
+
+#smallLogo {
+    width: 45%;
+    margin-left: 27%;
+}
+
+.registerform {
+    padding: 10% 0;
+}
+
+.registerform h2 {
+    margin-bottom: 8%;
+}
