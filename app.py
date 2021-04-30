@@ -1,8 +1,9 @@
-from setup_db import add_trip, delete_trip_by_id, get_all_trips, updateFavorite, updateFinish, updateTrip_by_id, get_trip_by_id, get_hash_for_login, get_user_by_name
+from setup_db import add_trip, delete_trip_by_id, get_all_trips, updateFavorite, updateFinish, updateTrip_by_id, get_trip_by_id, get_hash_for_login, get_user_by_name, add_user
 from flask import Flask, url_for, request, abort, g, flash, session
 import sqlite3
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
+import re
 
 app = Flask(__name__)
 app.secret_key = "eawadæniowqno83y7w93m96b3666bsefnalqqaaaknqpidh289n19ncos"
@@ -60,6 +61,42 @@ def getUser():
         print(user)
         return json.dumps(user)
     return {"isLoggedIn": False}
+
+# Register:
+@app.route("/register", methods=["POST"])
+def register():
+    #validate username
+    error = []
+    loginData = request.get_json()
+    print(loginData)
+    if loginData["username"] == "":
+        error.append("Username must be entered")
+    if len(loginData["username"]) < 6:
+        error.append("Username must have at least 6 characters")
+    #Validate password:
+    if loginData["password"] == "":
+        error.append("Password must be entered")
+    if not re.findall('.*[a-z].*', loginData["password"]):
+        error.append("Password must contain a lower case letter")
+    #Check for uppercase character
+    if not re.findall('.*[A-Z].*', loginData["password"]):
+        error.append("Password must contain an upper case letter")
+    #Check for number character
+    if not re.findall('.*[0-9].*', loginData["password"]):
+        error.append("Password must contain a numeric value")
+    #Check for special characters
+    if not re.findall('.*[_@$!?].*', loginData["password"]):
+        error.append("Password must contain a special character")
+    if len(error) != 0:
+        return {"errors": error}
+    hash = generate_password_hash(loginData["password"])
+    conn = get_db()
+    id = add_user(conn, loginData["username"], hash)
+    if id == -1:
+        error.append("Username already taken")
+        return {"errors": error}
+    session["username"] = loginData["username"]
+    return {"errors": []}
 
 # Get all trips from db:
 @app.route("/trips", methods=["GET"])

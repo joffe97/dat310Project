@@ -481,3 +481,11 @@ aside .country-table td {
 .registerform h2 {
     margin-bottom: 8%;
 }
+
+.valError {
+    font-size: 10px;
+}
+
+#registerError:first-child {
+    text-align: center;
+}
