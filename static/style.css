@@ -273,6 +273,11 @@ label.fixed {
     width: 100px;
 }
 
+.uploading-image {
+    width: 60%;
+    display:flex;
+}
+
 /** Mini menu on finished trips **/
 #nrMenu {
     background-color: #f2f2f2;

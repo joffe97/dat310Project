@@ -44,7 +44,8 @@ let upnext = {
                     </select><br>
                     <label for="date" class="fixed">Date:</label><input type="date" id="date" v-model="newtrip.date" /><br>
                     <label for="description" class="fixed">Description: </label><input id="description" v-model="newtrip.description"/><br>
-                    <label for="uploadimage" class="fixed">Image: </label><input type="file" accept="image/*" id="file-input"><br>
+                    <label for="uploadimage" class="fixed">Image: </label><input type="file" accept="image/*" id="file-input" @change=uploadImage><br>
+                    <img v-if="imagePreview != ''" :src="imagePreview" class="uploading-image" />
                     <input type="submit" value="Submit" v-if="!editing">  
                 </form>
                 <p v-if="errors.length">
@@ -94,6 +95,7 @@ let upnext = {
             errors: [],
             editing: false,
             daysUntilNextTrip: 0,
+            imagePreview: "",
         }
     },
     created: async function(){
@@ -113,6 +115,15 @@ let upnext = {
         }
     },
     methods: {
+        uploadImage(e){
+            let image = e.target.files[0];
+            let reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{
+                this.imagePreview = e.target.result;
+                console.log(this.imagePreview);
+            };
+        },
         finishedTrips: function() {
             let now = new Date();
             for (let i=0;i<this.trips.length;i++) {
