@@ -48,7 +48,8 @@ let finishedtrips = {
                 <div class="container">
                     <form class="box">
                         <label for="description" class="fixed">Description: </label><input id="description" v-model="oldtrip.description"/><br>
-                        <label for="uploadimage" class="fixed">Image: </label><input type="file" accept="image/*" id="file-input"><br>
+                        <label for="uploadimage" class="fixed">Image: </label><input type="file" accept="image/*" id="file-input" @change=uploadImage><br>
+                        <img v-if="imagePreview != ''" :src="imagePreview" class="uploading-image" />
                         <button @click="modifyTrip" type="button" v-if="editing" id="modButton" v-bind:style="{'margin-left': '40%', 'margin-bottom': '10px'}">Modify trip</button>
                     </form>
                     <p v-if="errors.length">
@@ -145,7 +146,8 @@ let finishedtrips = {
                 { text: '14', value: '14' },
                 { text: '16', value: '16' },
                 { text: '18', value: '18' },
-            ]
+            ], 
+            imagePreview: "",
         }
     },
     created: async function(){
@@ -162,6 +164,16 @@ let finishedtrips = {
         }
     },
     methods: {
+        uploadImage(e){
+            let image = e.target.files[0];
+            let reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{
+                this.imagePreview = e.target.result;
+                this.oldtrip.image = e.target.result;
+                console.log(this.imagePreview);
+            };
+        },
         togglefav: async function(trip) {
             this.nrfavTrips = 0
             for (let i=0;i<this.oldTrips.length;i++) {
@@ -243,6 +255,7 @@ let finishedtrips = {
             this.oldtrip.tripid = trip.tripid;
             this.oldtrip.description = trip.description;
             this.oldtrip.image = trip.image;
+            this.imagePreview = trip.image;
             this.editing = true;
             this.seen = true;
         },
