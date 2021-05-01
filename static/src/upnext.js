@@ -121,6 +121,7 @@ let upnext = {
             reader.readAsDataURL(image);
             reader.onload = e =>{
                 this.imagePreview = e.target.result;
+                this.newtrip.image = e.target.result;
                 console.log(this.imagePreview);
             };
         },
