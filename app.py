@@ -36,7 +36,6 @@ def valid_login(usr, pwd):
 @app.route("/checkUsrPwd", methods=["POST"])
 def validateLogin():
     loginData = request.get_json()
-    print("Data: {}".format(loginData)) # Remove this afterwards.
     if loginData.get("username", "") != "":
         if valid_login(loginData["username"], loginData["password"]):
             conn = get_db()
@@ -49,7 +48,6 @@ def validateLogin():
         else:
             return {"valid": False}
     else: 
-        # bad request return 400 error
         abort(400, "Missing requirements")
 
 # Get current user:
@@ -96,14 +94,29 @@ def register():
         error.append("Username already taken")
         return {"errors": error}
     session["username"] = loginData["username"]
+    user = get_user_by_name(conn, session["username"])
+    session["role"] = user["role"]
     return {"errors": []}
+
+#Log out:
+@app.route("/logOut", methods=["POST"])
+def logOut():
+    user = request.get_json()
+    print("User: {}".format(user))
+    if user.get("username", "") != "":
+        session.pop("username")
+        session.pop("role")
+        print("User: {} with role {} logged out".format(user["username"], user["role"]))
+        return {"successfull": True}
+    else: 
+        abort(400, "Missing requirements")
 
 # Get all trips from db:
 @app.route("/trips", methods=["GET"])
 def getTrips():
     conn = get_db()
-    trips = get_all_trips(conn, 1) # Need to insert user id here!!!!
-    print(trips)
+    user = get_user_by_name(conn, session["username"])
+    trips = get_all_trips(conn, user["userid"])
     return json.dumps(trips)
 
 # Delete, add and modify trips that are under the "Up Next page"
@@ -127,10 +140,11 @@ def deleteTrip(tid):
     print(tid)
     if (tid):
         conn = get_db()
-        alltrips = get_all_trips(conn, 1) #Endre med skikkelig UID!!!
+        user = get_user_by_name(conn, session["username"])
+        alltrips = get_all_trips(conn, user["userid"])
         for trip in alltrips:
             if trip["tripid"] == tid:
-                delete_trip_by_id(conn, tid, 1) #Endre med skikkelig UID!!!
+                delete_trip_by_id(conn, tid, user["userid"])
                 break
     else:
         #not found
@@ -143,7 +157,8 @@ def updateTrip(tripid):
     if data.get("tripid", "") == "":
         abort(400, "No new trip submitted")
     conn = get_db()
-    alltrips = get_all_trips(conn, 1) #Endre med skikkelig UID!!!
+    user = get_user_by_name(conn, session["username"])
+    alltrips = get_all_trips(conn, user["userid"])
     for trip in alltrips:
         if trip["tripid"] == tripid:
             updateTrip_by_id(conn, tripid, data["city"], data["country"], data["continent"], data["date"], data["description"], data["image"], data["userid"])
@@ -161,14 +176,15 @@ def updateFav(tripid):
     if data.get("tripid", "") == "":
         abort(400, "No trip submitted")
     conn = get_db()
-    alltrips = get_all_trips(conn, 1) #Endre med skikkelig UID!!!
+    user = get_user_by_name(conn, session["username"])
+    alltrips = get_all_trips(conn, user["userid"])
     for trip in alltrips:
         print(trip["tripid"])
         if trip["tripid"] == tripid:
             if trip["favorite"] == False:
-                updateFavorite(conn, tripid, 1, True) # Endre med skikkelig UID!!!
+                updateFavorite(conn, tripid, user["userid"], True)
             else:
-                updateFavorite(conn, tripid, 1, False) # Endre med skikkelig UID!!!
+                updateFavorite(conn, tripid, user["userid"], False)
             print(get_trip_by_id(conn, tripid))
             break
     else:
@@ -183,18 +199,18 @@ def updateFinished(tripid):
     if data.get("tripid", "") == "":
         abort(400, "No trip submitted")
     conn = get_db()
-    alltrips = get_all_trips(conn, 1) #Endre med skikkelig UID!!!
+    user = get_user_by_name(conn, session["username"])
+    alltrips = get_all_trips(conn, user["userid"])
     for trip in alltrips:
         print(trip["tripid"])
         if trip["tripid"] == tripid:
             if trip["finished"] == False:
-                updateFinish(conn, tripid, 1, True) # Endre med skikkelig UID!!!
+                updateFinish(conn, tripid, user["userid"], True)
             else:
-                updateFinish(conn, tripid, 1, False) # Endre med skikkelig UID!!!
+                updateFinish(conn, tripid, user["userid"], False)
             print(get_trip_by_id(conn, tripid))
             break
     else:
-        #not found
         abort(404, "Trip not found")
     return "Trip {} finished updated!".format(tripid)
 

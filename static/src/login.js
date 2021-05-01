@@ -10,7 +10,7 @@ let loginform = {
                                 <input id="username" v-model="loginData.username" placeholder="Username" required/><br>
                                 <input type="password" id="password" v-model="loginData.password" placeholder="Password" required/><br>
                                 <input class="loginButtons" type="submit" value="Log In"> 
-                                <button class="loginButtons" type="button" @click="">Register</button>
+                                <button class="loginButtons" type="button" @click="toRegister">Register</button>
                             </form>
                             <div v-if="proccessing" class="text-center"> Please wait... </div>
                             <div v-if="invalid" class="text-center"> Invalid username or password</div>
@@ -60,10 +60,24 @@ let loginform = {
                 } else {
                     //this.$emit('successfulllogin')
                     this.$router.push("/upnext")
+                    // Must be another way to update user status.
+                    let request = await fetch("/user");
+                    if (request.status == 200){
+                        let result = await request.json();
+                        console.log(result)
+                        if (result.username) {
+                            store.state.activeUser = result
+                        } else {
+                            store.state.activeUser = ""
+                        }
+                    }
                 }
             }
             // block the traditional submission of the form.
             e.preventDefault();
         },
+        toRegister: function() {
+            this.$router.push("/register")
+        }
     },
 }
