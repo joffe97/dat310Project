@@ -176,18 +176,13 @@ let upnext = {
         addTrip: function (e) {
             if (this.validateForm(e)) {
                 console.log("no errors")
-                userid = this.getUserId();
+                userid = store.state.activeUser.userid
                 this.sendTrip(userid)
                 this.getAlltrips()
                 this.resetInputs()
                 this.seen = false
             } else {
                 console.log("errors")
-            }
-        },
-        getUserId: function() {
-            if (this.trips.length) {
-                return this.trips[0].userid
             }
         },
         sendTrip: async function(uid) {

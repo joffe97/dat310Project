@@ -127,6 +127,7 @@ def addTrip():
     print("Trip: {}".format(trip))
     if trip.get("city", "") != "":
         conn = get_db()
+        print(trip)
         newTripId = add_trip(conn, trip["city"], trip["country"], trip["continent"], trip["date"], trip["description"], trip["image"], trip["userid"])
         trip["tripid"] = newTripId
         print("Trip: {} got ID {}".format(trip, newTripId))

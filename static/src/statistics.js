@@ -70,13 +70,14 @@ let statistics = {
                 {continent: 'The World', countriesVistied: 0, totalCountries: 196},
             ],
             pieData: [
-                {color: '#545677', value: 10 },
-                {color: '#1C6E8C', value: 10 },
-                {color: '#91B7C7', value: 10 },
-                {color: '#E2C044', value: 10 },
-                {color: '#FF8552', value: 10 },
-                {color: '#63C7B2', value: 20 },
-                {color: '#8E6C88', value: 30 },
+                {color: '#545677', value: 0 },
+                {color: '#1C6E8C', value: 0 },
+                {color: '#91B7C7', value: 0 },
+                {color: '#E2C044', value: 0 },
+                {color: '#FF8552', value: 0 },
+                {color: '#63C7B2', value: 0 },
+                {color: '#8E6C88', value: 0 },
+                {color: 'white', value: 100},
             ],
             completedTrips: []
         }
