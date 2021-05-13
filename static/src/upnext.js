@@ -89,7 +89,7 @@ let upnext = {
                 { text: 'South America', value: 'South America' },
                 { text: 'Asia', value: 'Asia' },
                 { text: 'Africa', value: 'Africa' },
-                { text: 'Australia/Oceania', value: 'Australia/Oceania' },
+                { text: 'Australia/Oceania', value: 'Oceania' },
                 { text: 'Antarctica', value: 'Antarctica' }
             ],
             errors: [],

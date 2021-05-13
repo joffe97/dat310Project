@@ -276,6 +276,6 @@ if __name__ == "__main__":
         add_trip(conn, "Rome", "Italy", "Europe", "2019-06-12", "This is going to be the best trip ever. We are visiting some of the most amazing places in the world", "static/images/rome.jpeg", 2)
         add_trip(conn, "Berlin", "Germany", "Europe", "2018-06-12", "This is going to be the best trip ever. We are visiting some of the most amazing places in the world", "static/images/berlin.jpeg", 2)
         add_trip(conn, "Amsterdam", "The Netherlands", "Europe", "2017-06-12", "This is going to be the best trip ever. We are visiting some of the most amazing places in the world", "static/images/amsterdam.jpeg", 2)
-        add_trip(conn, "Perth", "Australia", "Australia/Oceania", "2018-06-01", "This is going to be the best trip ever. We are visiting some of the most amazing places in the world", "static/images/perth.jpeg", 2)
+        add_trip(conn, "Perth", "Australia", "Oceania", "2018-06-01", "This is going to be the best trip ever. We are visiting some of the most amazing places in the world", "static/images/perth.jpeg", 2)
         add_trip(conn, "Hong Kong", "China", "Asia", "2022-06-01", "This is going to be the best trip ever. We are visiting some of the most amazing places in the world", "static/images/hongKong.jpeg", 2)
         conn.close()

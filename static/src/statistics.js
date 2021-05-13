@@ -100,6 +100,7 @@ let statistics = {
         numberOf: function() {
             let countedCountries = [];
             for (let i= 0; i < this.completedTrips.length; i++) {
+                console.log(this.completedTrips[i])
                 for (let j = 0; j < this.continents.length-1; j++) {
                     if (this.completedTrips[i]["continent"] === this.continents[j].continent) {
                         if (countedCountries.includes(this.completedTrips[i]["country"])) {
