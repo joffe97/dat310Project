@@ -188,7 +188,7 @@ let upnext = {
         },
         sendTrip: async function(uid) {
             let new_trip = Vue.reactive({tripid: null, city: this.newtrip.city, country: this.newtrip.country, continent: this.newtrip.continent, date: this.newtrip.date, description: this.newtrip.description, image: this.newtrip.image, favorite: false, finished: false, userid: uid});
-            //this.trips.push(new_trip);
+            this.trips.push(new_trip);
             //this.finishedTrips()
             let request = await fetch("/trips", {
                 method: "POST",
@@ -204,7 +204,7 @@ let upnext = {
                     //if (new Date(result.date) < new Date()) {
                     //    this.makeFinished(result)
                     //}
-                    this.trips.push(result);
+                    //this.trips.push(result);
                 }
             }
         },
