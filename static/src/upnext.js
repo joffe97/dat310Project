@@ -62,6 +62,7 @@ let upnext = {
             <tripArticle
             v-for="article, index in trips.length-1"
             v-bind:article="trips[index+1]" 
+            :key="trips[index+1].tripid"
             v-on:delete="deleteTrip(index, false)"
             v-on:modify="editInfo(trips[index+1])"
             >
@@ -187,8 +188,8 @@ let upnext = {
         },
         sendTrip: async function(uid) {
             let new_trip = Vue.reactive({tripid: null, city: this.newtrip.city, country: this.newtrip.country, continent: this.newtrip.continent, date: this.newtrip.date, description: this.newtrip.description, image: this.newtrip.image, favorite: false, finished: false, userid: uid});
-            this.trips.push(new_trip);
-            this.finishedTrips()
+            //this.trips.push(new_trip);
+            //this.finishedTrips()
             let request = await fetch("/trips", {
                 method: "POST",
                 headers: {
@@ -198,9 +199,12 @@ let upnext = {
             });
             if (request.status == 200){
                 let result = await request.json();
-                console.log(result);
                 if (new_trip.city == result.city && new_trip.date == result.date){
                     new_trip.tripid = result.tripid;
+                    //if (new Date(result.date) < new Date()) {
+                    //    this.makeFinished(result)
+                    //}
+                    this.trips.push(result);
                 }
             }
         },

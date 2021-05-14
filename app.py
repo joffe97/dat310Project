@@ -4,6 +4,7 @@ import sqlite3
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
+from datetime import date
 
 app = Flask(__name__)
 app.secret_key = "eawadæniowqno83y7w93m96b3666bsefnalqqaaaknqpidh289n19ncos"
@@ -124,13 +125,14 @@ def getTrips():
 def addTrip():
     """adds a new trip and creates a tripid """
     trip = request.get_json()
-    print("Trip: {}".format(trip))
     if trip.get("city", "") != "":
         conn = get_db()
-        print(trip)
         newTripId = add_trip(conn, trip["city"], trip["country"], trip["continent"], trip["date"], trip["description"], trip["image"], trip["userid"])
         trip["tripid"] = newTripId
-        print("Trip: {} got ID {}".format(trip, newTripId))
+        print("Trip to {} got ID {}".format(trip["city"], newTripId))
+        #if trip["date"] < date.today().strftime('%Y-%m-%d'):
+        #    updateFavorite(conn, trip["tripid"], session["username"], 1)
+        #    trip["tripid"] = 1
         return trip
     else: 
         # bad request return 400 error
@@ -138,7 +140,6 @@ def addTrip():
 
 @app.route("/trip/<int:tid>", methods=["DELETE"])
 def deleteTrip(tid):
-    print(tid)
     if (tid):
         conn = get_db()
         user = get_user_by_name(conn, session["username"])
@@ -163,7 +164,6 @@ def updateTrip(tripid):
     for trip in alltrips:
         if trip["tripid"] == tripid:
             updateTrip_by_id(conn, tripid, data["city"], data["country"], data["continent"], data["date"], data["description"], data["image"], data["userid"])
-            print(get_trip_by_id(conn, tripid))
             break
     else:
         #not found
@@ -180,13 +180,11 @@ def updateFav(tripid):
     user = get_user_by_name(conn, session["username"])
     alltrips = get_all_trips(conn, user["userid"])
     for trip in alltrips:
-        print(trip["tripid"])
         if trip["tripid"] == tripid:
             if trip["favorite"] == False:
                 updateFavorite(conn, tripid, user["userid"], True)
             else:
                 updateFavorite(conn, tripid, user["userid"], False)
-            print(get_trip_by_id(conn, tripid))
             break
     else:
         #not found
