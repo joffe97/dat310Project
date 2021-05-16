@@ -1,10 +1,11 @@
-from setup_db import add_trip, delete_trip_by_id, get_all_trips, updateFavorite, updateFinish, updateTrip_by_id, get_trip_by_id, get_hash_for_login, get_user_by_name, add_user
-from flask import Flask, url_for, request, abort, g, flash, session
+from setup_db import *
+from flask import Flask, url_for, request, abort, g, flash, session, make_response, redirect
 import sqlite3
 import json
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 from datetime import date
+import datetime
 
 app = Flask(__name__)
 app.secret_key = "eawadæniowqno83y7w93m96b3666bsefnalqqaaaknqpidh289n19ncos"
@@ -44,7 +45,9 @@ def validateLogin():
             print(user)
             session["username"] = user["username"]
             session["role"] = user["role"]
-            print("User: {} validated".format(loginData["username"]))
+#            if 'stylePreferences' in session:
+#                return  {"valid": True, "preferences": session["stylePreferences"]}
+#            print("User: {} validated".format(loginData["username"]))
             return {"valid": True}
         else:
             return {"valid": False}
@@ -212,6 +215,39 @@ def updateFinished(tripid):
     else:
         abort(404, "Trip not found")
     return "Trip {} finished updated!".format(tripid)
+
+# Save appearance preferences in a cookie:
+@app.route("/saveSettings", methods=["POST"])
+def savePreferences():
+    preferences = request.get_json()
+    print(preferences)
+    #if preferences.get("backgroundColor", "") != "" and preferences.get("fontSize", "") != "" and preferences.get("borderColor", "") != "":
+    session["style"] = preferences
+        #response = make_response(redirect(url_for("index")))
+        #expiry_date = datetime.datetime.now() + datetime.timedelta(days=1)
+        #if request.cookies.get("background", None):
+        #    response.set_cookie("background", "", expires=0)
+        #if request.cookies.get("size", None):
+        #    response.set_cookie("size", "", expires=0)
+        #if request.cookies.get("border", None):
+        #    response.set_cookie("border", "", expires=0)        
+        #response.set_cookie("background", preferences["backgroundColor"], expires=expiry_date)
+        #response.set_cookie("size", preferences["fontSize"], expires=expiry_date)
+        #response.set_cookie("border", preferences["borderColor"], expires=expiry_date)
+        #return response
+    return preferences
+
+@app.route("/getCookieInfo", methods=["GET"])
+def getCookies():
+    if "style" in session:
+        return json.dumps(session["style"])
+    else:
+        return ""
+    #if request.cookies.get("background", None) != None and request.cookies.get("size", None) != None and request.cookies.get("border", None) != None:
+    #    style = {"backgroundColor": request.cookies.get("background", None), "fontSize": request.cookies.get("size", None), "borderColor": request.cookies.get("border", None)}
+    #    return json.dumps(style)
+    #else:
+    #    return ""
 
 @app.route("/")
 def index():

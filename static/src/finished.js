@@ -19,6 +19,7 @@ let finishedtrips = {
                 <favArticle
                     v-for="article,index in oldTrips"
                     v-bind:article="article"
+                    v-bind:newStyle="style"
                     @togglefav="togglefav(oldTrips[index])"
                     @modify="editInfo(article)" 
                     >
@@ -32,7 +33,7 @@ let finishedtrips = {
             <div id="revisitMenu">
                 <button @click="showSettings = !showSettings" id="settingsButton">Settings</button>
                 <div id="serachFilterDiv">
-                    <label for="filter">Filter: </label>
+                    <label for="filter">Sort: </label>
                     <select id="filter" v-model="currFilter">
                         <option v-for="option in filters" v-bind:value="option.value">
                             {{ option.text }}
@@ -82,7 +83,7 @@ let finishedtrips = {
                                 {{ option.text }}
                             </option>
                         </select><br>
-                        <button @click="changeSettings" type="button">Change style</button>
+                        <button @click="changeSettings()" type="button">Change style</button>
                     </form>
                 </div>
             </div>
@@ -126,7 +127,7 @@ let finishedtrips = {
             nrfavTrips: 0,
             style: {
                 backgroundColor: 'white',
-                fontSize: 16,
+                fontSize: '16px',
                 borderColor: '#335c81'
             }, 
             showSettings: false,
@@ -142,10 +143,10 @@ let finishedtrips = {
                 { text: 'Champagne Pink', value: 'E5D0CC' },
             ],
             sizes: [
-                { text: '12', value: '12' },
-                { text: '14', value: '14' },
-                { text: '16', value: '16' },
-                { text: '18', value: '18' },
+                { text: '12', value: '12px' },
+                { text: '14', value: '14px' },
+                { text: '16', value: '16px' },
+                { text: '18', value: '18px' },
             ], 
             imagePreview: "",
         }
@@ -161,6 +162,11 @@ let finishedtrips = {
                 }
             }
             this.oldTrips = tmpList
+        }
+        if (store.state.preferences) {
+            this.style.backgroundColor = store.state.preferences.backgroundColor;
+            this.style.fontSize = store.state.preferences.fontSize;
+            this.style.borderColor = store.state.preferences.borderColor;
         }
     },
     methods: {
@@ -283,6 +289,25 @@ let finishedtrips = {
                 this.oldTrips = tmpList
             }
         },
+        changeSettings: async function() {
+            console.log(this.style)
+            let request = await fetch("/saveSettings", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(this.style)
+            });
+            if (request.status == 200){
+                let result = await request.json();
+                this.style.backgroundColor = result.backgroundColor;
+                this.style.fontSize = result.fontSize;
+                this.style.borderColor = result.borderColor;
+                store.state.preferences = result;
+                console.log(this.style);
+            }
+            this.showSettings = false;
+        }
     },
     computed: {
         filteredTrips: function() {

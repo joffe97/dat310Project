@@ -1,8 +1,8 @@
 let favC = {
-    props: ["article"],
+    props: ["article", "newStyle"],
     template: /*html*/`
     <div class="outer" v-if="article.favorite===1">
-        <div class="card front">
+        <div class="card front" :style="newStyle">
             <img :src="article.image" alt="ScheduledBanner"/>
             <div class="description">
                 <h3>{{article.city}}, {{article.country}}</h3>

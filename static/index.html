@@ -94,6 +94,16 @@
                     }
                 }
             },
+            created: async function() {
+                let request = await fetch("/getCookieInfo");
+                if (request.status == 200){
+                    let result = await request.json();
+                    console.log(result);
+                    if (result != "") {
+                        store.state.preferences = result
+                    }
+                }
+            }
         });
         app.use(router);
         app.component('tripArticle', articleC);

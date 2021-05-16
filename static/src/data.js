@@ -35,6 +35,8 @@ class DataStore {
             //finishedTrips: [],
             //plannedTrips: [],
             activeUser: "",
+            preferences: "",
+            style: {backgroundColor: 'white', fontSize: 16, borderColor: '#335c81'}, 
         });
     }
 }

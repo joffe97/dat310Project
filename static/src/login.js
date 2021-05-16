@@ -71,6 +71,7 @@ let loginform = {
                             store.state.activeUser = ""
                         }
                     }
+                    this.getCookies()
                 }
             }
             // block the traditional submission of the form.
@@ -78,6 +79,17 @@ let loginform = {
         },
         toRegister: function() {
             this.$router.push("/register")
+        },
+        //Trenger man denne her når man har den i index.html?
+        getCookies: async function() {
+            let request = await fetch("/getCookieInfo");
+            if (request.status == 200){
+                let result = await request.json();
+                console.log(result);
+                if (result != "") {
+                    store.state.preferences = result
+                }
+            }
         }
     },
 }

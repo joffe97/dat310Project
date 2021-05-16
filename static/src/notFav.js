@@ -3,7 +3,7 @@ let notFavC = {
     template: /*html*/`
     <div class="outer" v-if="article.favorite===0">
         <div class="card front" :style="newStyle">
-            <img :src="article.image" alt="ScheduledBanner"/>
+            <img :src="article.image" alt="Tripimage"/>
             <div class="description">
                 <h3>{{article.city}}, {{article.country}}</h3>
                 <p><strong>Departure: {{ article.date }}</strong></p>
@@ -23,6 +23,11 @@ let notFavC = {
         </div>
     </div>
     `,
+    data: function() {
+        return {
+            preferences: store.state.preferences
+        }
+    },
     computed: {
         is_fav() {
             return this.article.favorite;
