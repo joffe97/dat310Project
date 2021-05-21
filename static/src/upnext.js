@@ -174,6 +174,7 @@ let upnext = {
             }
             e.preventDefault();
         }, 
+        // De to funksjonene for å legge til en tur er her i js:
         addTrip: function (e) {
             if (this.validateForm(e)) {
                 console.log("no errors")

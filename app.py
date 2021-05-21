@@ -124,6 +124,7 @@ def getTrips():
     return json.dumps(trips)
 
 # Delete, add and modify trips that are under the "Up Next page"
+# Her er backend for å legge til turen.
 @app.route("/trips", methods=["POST"])
 def addTrip():
     """adds a new trip and creates a tripid """
@@ -134,7 +135,7 @@ def addTrip():
         trip["tripid"] = newTripId
         print("Trip to {} got ID {}".format(trip["city"], newTripId))
         #if trip["date"] < date.today().strftime('%Y-%m-%d'):
-        #    updateFavorite(conn, trip["tripid"], session["username"], 1)
+        #    updateFinished(conn, trip["tripid"], session["username"], 1)
         #    trip["tripid"] = 1
         return trip
     else: 
